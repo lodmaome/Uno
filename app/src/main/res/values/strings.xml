@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Uno</string>
+    <string name="uno_logo_nome">Uno</string>
+    <string name="button_opcoes">Opções</string>
+    <string name="button_criar_sala">Criar sala</string>
+    <string name="texto_pedir_nome_usuario">Insira seu nome:</string>
+    <string name="texto_inserir_nome_usuario"></string>
+    <string name="botao_confirma_nome">Confirmar</string>
+</resources>
