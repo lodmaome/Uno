@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         botaoJogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, JogarActivity.class));
+                //startActivity(new Intent(MainActivity.this, JogarActivity.class));
             }
         });
     }
