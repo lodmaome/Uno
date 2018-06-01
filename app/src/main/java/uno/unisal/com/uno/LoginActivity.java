@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class LoginActivity extends AppCompatActivity {
-    Carta rosa = new Carta();
+    //Carta rosa = new Carta();
 
 
 
