@@ -1,10 +1,13 @@
 package uno.unisal.com.uno.classes;
 
-import java.util.ArrayList;
+import android.app.Application;
 
-public class Deck {
-    // private ArrayList<Carta> cartas = new ArrayList<>();
-    Carta carta = new Carta("Azul", "1", "blue_0", 1);
+public class Deck extends Application{
+    //private ArrayList<Carta> cartas = new ArrayList<>();
+   final Carta cartinha = new Carta();
+
+
+    //Image = ImageIO.read(new File("location.png"));
 
     public void distribuirCartas(){
 

@@ -1,49 +1,43 @@
 package uno.unisal.com.uno.classes;
 
+import android.app.Application;
+import android.content.res.Configuration;
 import android.media.Image;
 
-public class Carta {
-         private String cor;
-         private String simbolo;
-         private Image imagem;
-         private int id;
 
-    public Carta(String cor, String simbolo, Image imagem, int id) {
-        this.cor = cor;
-        this.simbolo = simbolo;
-        this.imagem = imagem;
-        this.id = id;
+public class Carta extends Application{
+    private String rosa;
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
-    public void setCor(String cor) {
-        this.cor = cor;
+    @Override
+    public void onCreate() {
+        super.onCreate();
     }
 
-    public void setSimbolo(String simbolo) {
-        this.simbolo = simbolo;
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
     }
 
-    public void setImagem(Image imagem) {
-        this.imagem = imagem;
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
     }
 
-    public void setId(int id) {
-        this.id = id;
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
     }
 
-    public String getCor() {
-        return cor;
+    public String getRosa() {
+        return rosa;
     }
 
-    public String getSimbolo() {
-        return simbolo;
-    }
-
-    public Image getImagem() {
-        return imagem;
-    }
-
-    public int getId() {
-        return id;
+    public void setRosa(String rosa) {
+        this.rosa = rosa;
     }
 }

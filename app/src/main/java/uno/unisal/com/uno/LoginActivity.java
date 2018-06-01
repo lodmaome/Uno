@@ -7,7 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import uno.unisal.com.uno.classes.Carta;
+
 public class LoginActivity extends AppCompatActivity {
+    Carta rosa = new Carta();
+
+
 
     private Button botaoLogin;
     private TextView nomeAuxiliar;

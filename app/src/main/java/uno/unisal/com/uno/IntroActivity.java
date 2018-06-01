@@ -7,7 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import uno.unisal.com.uno.classes.Carta;
+
 public class IntroActivity extends AppCompatActivity {
+
+
 
     private ImageView botaoIntro;
 
@@ -15,6 +19,7 @@ public class IntroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
+
 
         botaoIntro = (ImageView) findViewById(R.id.botaoIntroId);
 

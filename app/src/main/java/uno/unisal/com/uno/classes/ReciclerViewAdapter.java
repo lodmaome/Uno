@@ -19,7 +19,7 @@ public class ReciclerViewAdapter extends RecyclerView.Adapter {
     private static final String TAG = "RecyclerViewAdapter";
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateVIewHolder: called.")
+        Log.d(TAG, "onCreateVIewHolder: called.");
         return null;
     }
 

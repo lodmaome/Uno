@@ -1,13 +1,22 @@
 package uno.unisal.com.uno;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v7.app.AppCompatActivity;
 
-import java.util.ArrayList;
+import uno.unisal.com.uno.classes.Carta;
 
-public class JogarActivity extends AppCompatActivity {
+public abstract class JogarActivity extends AppCompatActivity{
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        final Carta cartinha = new Carta();
+cartinha
+
+    }
+
+
+
 
 
 }
