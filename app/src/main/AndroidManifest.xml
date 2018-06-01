@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".classes.Carta">
-        <activity android:name=".IntroActivity">
+        <activity android:name=".JogarActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,7 +19,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".JogarActivity" />
+        <activity android:name=".IntroActivity" />
         <activity android:name=".SalaActivity"></activity>
     </application>
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import uno.unisal.com.uno.classes.Carta;
 
 public class LoginActivity extends AppCompatActivity {
-    Carta rosa = new Carta();
+    //Carta rosa = new Carta();
 
 
 
