@@ -6,7 +6,18 @@ import android.media.Image;
 
 
 public class Carta extends Application{
-    private String rosa;
+
+    private int imagem;
+    private int id;
+    private String caracter;
+    private String cor;
+
+    public Carta(int imagem, int id, String caracter, String cor) {
+        this.imagem = imagem;
+        this.id = id;
+        this.caracter = caracter;
+        this.cor = cor;
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -33,11 +44,43 @@ public class Carta extends Application{
         super.onTrimMemory(level);
     }
 
-    public String getRosa() {
-        return rosa;
+
+    public int getImagem() {
+        return imagem;
     }
 
-    public void setRosa(String rosa) {
-        this.rosa = rosa;
+    public void setImagem(int imagem) {
+        this.imagem = imagem;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCaracter() {
+        return caracter;
+    }
+
+    public void setCaracter(String caracter) {
+        this.caracter = caracter;
+    }
+
+    public String getCor(String verde) {
+        return cor;
+    }
+
+    public void setCor(String cor) {
+        this.cor = cor;
+    }
+
+    @Override
+    public String toString() {
+        return toString();
+    }
+
+
 }
