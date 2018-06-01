@@ -19,14 +19,15 @@ public class JogoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jogo);
         
-        mDataset = new ArrayList<>;
-        for (int i = 0; i < 30; i++) {
+        mDataset = new ArrayList<>();
+
+        for (int i = 0; i < 50; i++) {
             mDataset.add("New title #" + i);
         }
         
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MainAdapter(mDataset);
         mRecyclerView.setAdapter(mAdapter);
