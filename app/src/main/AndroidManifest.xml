@@ -16,11 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".IntroActivity" />
-        <activity android:name="JogarActivity" />
-        <activity android:name=".SalaActivity"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".JogarActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".SalaActivity"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>
