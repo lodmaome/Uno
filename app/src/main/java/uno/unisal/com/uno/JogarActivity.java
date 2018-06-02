@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import uno.unisal.com.uno.classes.Carta;
 
 public class JogarActivity extends AppCompatActivity{
