@@ -3,6 +3,7 @@ package uno.unisal.com.uno;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,20 +12,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import uno.unisal.com.uno.classes.Carta;
 
 public class JogoActivity extends Activity {
 
-    private int numeroJogadores = 4;
-    Integer[] controle = new Integer[108];
+    private int players = 4;
+    private int card;
+    Carta[] deck = new Carta[108];
+    ArrayList<Integer> controle = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jogo);
 
-        Carta[] deck = new Carta[108];
+
         deck[0] = new Carta(R.drawable.blue_0, 0, "0", "blue");deck[1] = new Carta(R.drawable.blue_1, 1, "1", "blue");deck[2] = new Carta(R.drawable.blue_1, 2, "1", "blue");
         deck[3] = new Carta(R.drawable.blue_2, 3, "2", "blue");deck[4] = new Carta(R.drawable.blue_2, 4, "2", "blue");deck[5] = new Carta(R.drawable.blue_3, 5, "3", "blue");
         deck[6] = new Carta(R.drawable.blue_3, 6, "3", "blue");deck[7] = new Carta(R.drawable.blue_4, 7, "4", "blue");deck[8] = new Carta(R.drawable.blue_4, 8, "4", "blue");
@@ -65,16 +69,34 @@ public class JogoActivity extends Activity {
         deck[103] = new Carta(R.drawable.wild_pick_four, 103, "pickFour", "black1");deck[104] = new Carta(R.drawable.wild_color_changer, 104, "colorChange", "black2");deck[105] = new Carta(R.drawable.wild_color_changer, 105, "colorChange", "black2");
         deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black2");deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black2");
 
+        embaralhar();
         LinearLayout gallery = findViewById(R.id.gallery);
         LayoutInflater inflater = LayoutInflater.from(this);
+        iniciar(gallery, inflater);
 
-        for (int i = 0; i < 12; i++) {
+        //fim onCreate
+    }
+
+    // clear the list and shuffle
+    public void embaralhar(){
+        controle.clear();
+        for (int i = 0; i < 108 ; i++) {
+            controle.add(i);
+        }
+        Collections.shuffle(controle);
+    }
+
+    public void iniciar(LinearLayout gallery, LayoutInflater inflater){
+        for (int i = 0; i <7 ; i++) {
+            card = controle.get(0);
+            controle.remove(0);
+
             View view = inflater.inflate(R.layout.item, gallery, false);
-
             ImageView imageView = view.findViewById(R.id.imageView);
-            imageView.setImageResource(R.drawable.blue_1);
+            imageView.setImageResource(deck[card].getImagem());
 
             gallery.addView(view);
         }
     }
+
 }
