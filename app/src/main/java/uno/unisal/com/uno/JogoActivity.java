@@ -1,38 +1,32 @@
 package uno.unisal.com.uno;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
 import uno.unisal.com.uno.classes.Carta;
 
-public class JogoActivity extends AppCompatActivity {
+public class JogoActivity extends Activity {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
-    private ArrayList<String> mDataset;
+    private int numeroJogadores = 4;
+    Integer[] controle = new Integer[108];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jogo);
-        
-        mDataset = new ArrayList<>();
 
-        for (int i = 0; i < 50; i++) {
-            mDataset.add("New title #" + i);
+        for (int i = 0; i < 108 ; i++) {
+            controle[i] = i;
         }
-
-        mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MainAdapter(mDataset);
-        mRecyclerView.setAdapter(mAdapter);
 
         Carta[] deck = new Carta[108];
         deck[0] = new Carta(R.drawable.blue_0, 0, "0", "blue");
@@ -144,5 +138,16 @@ public class JogoActivity extends AppCompatActivity {
         deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black2");
         deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black2");
 
+        LinearLayout gallery = findViewById(R.id.gallery);
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        for (int i = 0; i < 12; i++) {
+            View view = inflater.inflate(R.layout.item, gallery, false);
+
+            ImageView imageView = view.findViewById(R.id.imageView);
+            imageView.setImageResource(R.drawable.blue_1);
+
+            gallery.addView(view);
+        }
     }
 }

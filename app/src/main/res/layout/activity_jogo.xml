@@ -6,29 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".JogoActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <HorizontalScrollView
         android:layout_width="400dp"
-        android:layout_height="125dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:background="#000"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="#000"
-        android:orientation="horizontal"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent">
 
-        ></android.support.v7.widget.RecyclerView>
-
-    <!--<TextView-->
-        <!--android:id="@+id/vetorJogarId"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginLeft="162dp"-->
-        <!--android:layout_marginStart="162dp"-->
-        <!--android:layout_marginTop="245dp"-->
-        <!--android:text="TextView"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
-
+        <LinearLayout
+            android:id="@+id/gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
 </android.support.constraint.ConstraintLayout>
