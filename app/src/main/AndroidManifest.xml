@@ -22,7 +22,10 @@
             android:screenOrientation="landscape"/>
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".IntroActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".SalaActivity"
             android:screenOrientation="landscape"/>
