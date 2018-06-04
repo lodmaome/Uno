@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".JogoActivity">
+    tools:context=".JogoActivity"
+    android:background="#F0F">
 
     <HorizontalScrollView
         android:layout_width="400dp"
@@ -22,9 +23,20 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
-            android:id="@+id/gallery"
+            android:id="@+id/scrollViewGalleryId"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal" />
     </HorizontalScrollView>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/recyclerViewId"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
