@@ -1,11 +1,13 @@
 package uno.unisal.com.uno;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,10 +20,13 @@ import uno.unisal.com.uno.classes.Carta;
 
 public class JogoActivity extends Activity {
 
+    private static final String TAG = "MainActivity";
+
     private int players = 4;
     private int card;
     Carta[] deck = new Carta[108];
     ArrayList<Integer> controle = new ArrayList<>();
+    private ArrayList <String> mImageUrls = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +75,12 @@ public class JogoActivity extends Activity {
         deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black2");deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black2");
 
         embaralhar();
-        LinearLayout gallery = findViewById(R.id.gallery);
+        LinearLayout scrollViewGallery = findViewById(R.id.scrollViewGalleryId);
         LayoutInflater inflater = LayoutInflater.from(this);
-        iniciar(gallery, inflater);
-
+        iniciar(scrollViewGallery, inflater);
+        jogarCarta(scrollViewGallery, inflater);
+        //novo
+        getImages();
         //fim onCreate
     }
 
@@ -86,17 +93,64 @@ public class JogoActivity extends Activity {
         Collections.shuffle(controle);
     }
 
-    public void iniciar(LinearLayout gallery, LayoutInflater inflater){
+    public void iniciar(LinearLayout scrollViewGallery, LayoutInflater inflater){
         for (int i = 0; i <7 ; i++) {
             card = controle.get(0);
             controle.remove(0);
 
-            View view = inflater.inflate(R.layout.item, gallery, false);
-            ImageView imageView = view.findViewById(R.id.imageView);
-            imageView.setImageResource(deck[card].getImagem());
+            View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
+            ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
+            imageViewCard.setImageResource(deck[card].getImagem());
 
-            gallery.addView(view);
+            scrollViewGallery.addView(view);
         }
     }
 
+    public void jogarCarta(final LinearLayout scrollViewGallery, LayoutInflater inflater){
+        View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
+        ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
+
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                scrollViewGallery.removeView(v);
+                return true;
+            }
+        });
+    }
+
+    private void getImages(){
+        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+
+        mImageUrls.add("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg");
+
+        mImageUrls.add("https://i.redd.it/tpsnoz5bzo501.jpg");
+
+        mImageUrls.add("https://i.redd.it/qn7f9oqu7o501.jpg");
+
+        mImageUrls.add("https://i.redd.it/j6myfqglup501.jpg");
+
+        mImageUrls.add("https://i.redd.it/0h2gm1ix6p501.jpg");
+
+        mImageUrls.add("https://i.redd.it/k98uzl68eh501.jpg");
+
+        mImageUrls.add("https://i.redd.it/glin0nwndo501.jpg");
+
+        mImageUrls.add("https://i.redd.it/obx4zydshg601.jpg");
+
+        mImageUrls.add("https://i.imgur.com/ZcLLrkY.jpg");
+
+        initRecyclerView();
+
+    }
+
+    private void initRecyclerView(){
+        Log.d(TAG, "initRecyclerView: init recyclerview");
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewId);
+        recyclerView.setLayoutManager(layoutManager);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter( mImageUrls, this);
+        recyclerView.setAdapter(adapter);
+    }
 }
