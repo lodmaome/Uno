@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import uno.unisal.com.uno.classes.Carta;
 
@@ -22,10 +23,24 @@ public class JogoActivity extends Activity {
 
     private static final String TAG = "MainActivity";
 
-    private int players = 4;
+    private int nPlayers = 4;
     private int card;
     Carta[] deck = new Carta[108];
-    ArrayList<Integer> controle = new ArrayList<>();
+    //ArrayList<Integer> players = new ArrayList<>();
+    List<Integer> playerNumCards = new ArrayList<>();
+    /*
+    [18:58, 6/4/2018] Felipe Lucas: com isso vc garante a consistencia de chave valor, crescendo a N usuários sem precisar se preocupar com a implementação
+    [18:59, 6/4/2018] Felipe Lucas: Map<Integer, list<Carta> = HashMap();
+    [18:59, 6/4/2018] Felipe Lucas: Map<Integer, list<Carta> cartasPorUser
+    [18:59, 6/4/2018] Felipe Lucas: cartasPorUser.put(chaveDoUsuario, newArraylist());
+    [18:59, 6/4/2018] Felipe Lucas: Adc um novo usuário
+    [19:00, 6/4/2018] Felipe Lucas: List<Cartas> cartasDoZequinha = cartasPorUser.get(chaveDoZequinha);
+    [19:00, 6/4/2018] Felipe Lucas: Por ser uma referencia de memória, o que vc fizer na lista do zequinha vai refletir na lista do mapa
+    [19:00, 6/4/2018] Felipe Lucas: WOOOOOOOOOOOOOOOOOOOOOW
+    [19:00, 6/4/2018] Felipe Lucas: topzera?
+     */
+    List<List<Carta>> playerCards = new ArrayList<List<Carta>>();
+    ArrayList<Integer> controleDeck = new ArrayList<>();
     private ArrayList <String> mImageUrls = new ArrayList<>();
 
     @Override
@@ -77,8 +92,9 @@ public class JogoActivity extends Activity {
         embaralhar();
         LinearLayout scrollViewGallery = findViewById(R.id.scrollViewGalleryId);
         LayoutInflater inflater = LayoutInflater.from(this);
-        iniciar(scrollViewGallery, inflater);
-        jogarCarta(scrollViewGallery, inflater);
+        //iniciar(scrollViewGallery, inflater);
+        iniciar()
+        //jogarCarta(scrollViewGallery, inflater);
         //novo
         getImages();
         //fim onCreate
@@ -86,38 +102,52 @@ public class JogoActivity extends Activity {
 
     // clear the list and shuffle
     public void embaralhar(){
-        controle.clear();
+        controleDeck.clear();
         for (int i = 0; i < 108 ; i++) {
-            controle.add(i);
+            controleDeck.add(i);
         }
-        Collections.shuffle(controle);
+        Collections.shuffle(controleDeck);
     }
 
-    public void iniciar(LinearLayout scrollViewGallery, LayoutInflater inflater){
-        for (int i = 0; i <7 ; i++) {
-            card = controle.get(0);
-            controle.remove(0);
+//    public void iniciar(LinearLayout scrollViewGallery, LayoutInflater inflater){
+//        for (int i = 0; i <7 ; i++) {
+//            card = controleDeck.get(0);
+//            controleDeck.remove(0);
+//
+//            View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
+//            ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
+//            imageViewCard.setImageResource(deck[card].getImagem());
+//
+//            scrollViewGallery.addView(view);
+//        }
+//    }
 
-            View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
-            ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
-            imageViewCard.setImageResource(deck[card].getImagem());
-
-            scrollViewGallery.addView(view);
-        }
-    }
-
-    public void jogarCarta(final LinearLayout scrollViewGallery, LayoutInflater inflater){
-        View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
-        ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
-
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                scrollViewGallery.removeView(v);
-                return true;
+    public void iniciar(){
+        for (int i = 0; i < nPlayers ; i++) {
+            List<Carta> list = new ArrayList<>();
+            playerCards.add(list);
+            playerNumCards.add(7);
+            for (int j = 0; j < 7 ; j++) {
+                card = controleDeck.get(0);
+                controleDeck.remove(0);
+                playerCards.get(i).add(deck[card]);
             }
-        });
+
+        }
     }
+
+//    public void jogarCarta(final LinearLayout scrollViewGallery, LayoutInflater inflater){
+//        View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
+//        ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
+//
+//        view.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                scrollViewGallery.removeView(v);
+//                return true;
+//            }
+//        });
+//    }
 
     private void getImages(){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
