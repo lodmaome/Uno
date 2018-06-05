@@ -28,8 +28,9 @@ public class JogoActivity extends Activity {
     private int nPlayers = 4;
     private int card;
     Carta[] deck = new Carta[108];
+    List<Integer> handView = new ArrayList<>();
     List<Integer> controleDeck = new ArrayList<>();
-    private ArrayList <String> mImageUrls = new ArrayList<>();
+    private ArrayList <String> cardsPictures = new ArrayList<>();
     Map<Integer, List<Carta>> playerCards =  new HashMap<Integer, List<Carta>>();
     //List<List<Carta>> playerCards= new ArrayList<List<Carta>>();
 
@@ -78,19 +79,13 @@ public class JogoActivity extends Activity {
         deck[103] = new Carta(R.drawable.wild_pick_four, 103, "pickFour", "black1");deck[104] = new Carta(R.drawable.wild_color_changer, 104, "colorChange", "black2");deck[105] = new Carta(R.drawable.wild_color_changer, 105, "colorChange", "black2");
         deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black2");deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black2");
 
-        embaralhar();
-        LinearLayout scrollViewGallery = findViewById(R.id.scrollViewGalleryId);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        iniciar();
-        //iniciar(scrollViewGallery, inflater);
-        //jogarCarta(scrollViewGallery, inflater);
-        //novo
-        getImages();
-        //fim onCreate
+        shuffleDeck();
+        start(handView);
+        getImages(handView);
     }
 
     // clear the list and shuffle
-    public void embaralhar(){
+    public void shuffleDeck(){
         controleDeck.clear();
         for (int i = 0; i < 108 ; i++) {
             controleDeck.add(i);
@@ -98,20 +93,8 @@ public class JogoActivity extends Activity {
         Collections.shuffle(controleDeck);
     }
 
-    public void iniciar(LinearLayout scrollViewGallery, LayoutInflater inflater){
-        for (int i = 0; i <7 ; i++) {
-            card = controleDeck.get(0);
-            controleDeck.remove(0);
 
-            View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
-            ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
-            imageViewCard.setImageResource(deck[card].getImagem());
-
-            scrollViewGallery.addView(view);
-        }
-    }
-
-    public void iniciar(){
+    public void start(List<Integer> handView){
         for (int i = 0; i < nPlayers ; i++) {
             List<Carta> hand = new ArrayList<>();
             for (int j = 0; j < 7 ; j++) {
@@ -122,43 +105,32 @@ public class JogoActivity extends Activity {
             playerCards.put(i, hand);
         }
 
-        //List<Carta> mao = playerCards.get(2);
+        for (int i = 0; i < 7; i++) {
+            handView.add(i,1);
+            handView.add(0, playerCards.get(i).get(i).getId());
+            //handView.add(i,playerCards.get(i).get(i).getId());
+        }
+
 
     }
 
-//    public void jogarCarta(final LinearLayout scrollViewGallery, LayoutInflater inflater){
-//        View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
-//        ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
-//
-//        view.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                scrollViewGallery.removeView(v);
-//                return true;
-//            }
-//        });
-//    }
 
-    private void getImages(){
+    private void getImages(List<Integer> handView){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
 
-        //ImageUrls.add(playerCards.get(2).indexOf(1));
+        //cardsPictures.add(playerCards.get(2).indexOf(1).);
+//        for (int i = 0; i < handView.size() ; i++) {
+//            cardsPictures.add(handView.get(i).toString());
+//        }
 
-        mImageUrls.add("https://i.redd.it/tpsnoz5bzo501.jpg");
 
-        mImageUrls.add("https://i.redd.it/qn7f9oqu7o501.jpg");
-
-        mImageUrls.add("https://i.redd.it/j6myfqglup501.jpg");
-
-        mImageUrls.add("https://i.redd.it/0h2gm1ix6p501.jpg");
-
-        mImageUrls.add("https://i.redd.it/k98uzl68eh501.jpg");
-
-        mImageUrls.add("https://i.redd.it/glin0nwndo501.jpg");
-
-        mImageUrls.add("https://i.redd.it/obx4zydshg601.jpg");
-
-        mImageUrls.add("https://i.imgur.com/ZcLLrkY.jpg");
+        cardsPictures.add("https://i.redd.it/qn7f9oqu7o501.jpg");
+        cardsPictures.add("https://i.redd.it/j6myfqglup501.jpg");
+        cardsPictures.add("https://i.redd.it/0h2gm1ix6p501.jpg");
+        cardsPictures.add("https://i.redd.it/k98uzl68eh501.jpg");
+        cardsPictures.add("https://i.redd.it/glin0nwndo501.jpg");
+        cardsPictures.add("https://i.redd.it/obx4zydshg601.jpg");
+        cardsPictures.add("https://i.imgur.com/ZcLLrkY.jpg");
 
         initRecyclerView();
 
@@ -170,7 +142,7 @@ public class JogoActivity extends Activity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerViewId);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter( mImageUrls, this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter( cardsPictures, this);
         recyclerView.setAdapter(adapter);
     }
 }

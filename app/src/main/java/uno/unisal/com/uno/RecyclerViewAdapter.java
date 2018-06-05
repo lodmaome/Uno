@@ -1,6 +1,7 @@
 package uno.unisal.com.uno;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +19,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "RecyclerViewAdapter";
 
     //vars
-    private ArrayList <String> mImageUrls = new ArrayList<>();
+    private ArrayList <String> cardsPictures = new ArrayList<>();
     private Context mContext;
 
-    public RecyclerViewAdapter(ArrayList<String> mImageUrls, Context mContext) {
-        this.mImageUrls = mImageUrls;
+    public RecyclerViewAdapter(ArrayList<String> cardsPictures, Context mContext) {
+        this.cardsPictures = cardsPictures;
         this.mContext = mContext;
     }
 
@@ -38,20 +39,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Glide.with(mContext)
                 .asBitmap()
-                .load(mImageUrls.get(position))
+                .load(cardsPictures.get(position))
                 .into(holder.imageViewCarta);
         holder.imageViewCarta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked on an image: " + mImageUrls.get(position));
-                Toast.makeText(mContext, mImageUrls.get(position), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: clicked on an image: " + cardsPictures.get(position));
+                //Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mImageUrls.size();
+        return cardsPictures.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
