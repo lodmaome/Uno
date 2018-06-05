@@ -26,13 +26,11 @@ public class JogoActivity extends Activity {
     private static final String TAG = "MainActivity";
 
     private int nPlayers = 4;
-    private int card;
     Carta[] deck = new Carta[108];
-    List<Integer> handView = new ArrayList<>();
     List<Integer> controleDeck = new ArrayList<>();
-    private ArrayList <String> cardsPictures = new ArrayList<>();
+    private ArrayList <Integer> cardsPictures = new ArrayList<>();
     Map<Integer, List<Carta>> playerCards =  new HashMap<Integer, List<Carta>>();
-    //List<List<Carta>> playerCards= new ArrayList<List<Carta>>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +78,16 @@ public class JogoActivity extends Activity {
         deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black2");deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black2");
 
         shuffleDeck();
-        start(handView);
-        getImages(handView);
+        start();
+        //initRecyclerView(recyclerView);
+        getImages(playerCards.get(0));
+        drawCard(playerCards.get(0), controleDeck);
+        drawCard(playerCards.get(0), controleDeck);
+        drawCard(playerCards.get(0), controleDeck);
+        drawCard(playerCards.get(0), controleDeck);
+        drawCard(playerCards.get(0), controleDeck);
+        drawCard(playerCards.get(0), controleDeck);
+        getImages(playerCards.get(0));
     }
 
     // clear the list and shuffle
@@ -94,7 +100,7 @@ public class JogoActivity extends Activity {
     }
 
 
-    public void start(List<Integer> handView){
+    public void start(){
         for (int i = 0; i < nPlayers ; i++) {
             List<Carta> hand = new ArrayList<>();
             for (int j = 0; j < 7 ; j++) {
@@ -104,41 +110,23 @@ public class JogoActivity extends Activity {
             }
             playerCards.put(i, hand);
         }
-
-        for (int i = 0; i < 7; i++) {
-            handView.add(i,1);
-            handView.add(0, playerCards.get(i).get(i).getId());
-            //handView.add(i,playerCards.get(i).get(i).getId());
-        }
-
-
     }
 
-
-    private void getImages(List<Integer> handView){
+    public void drawCard(List<Carta> hand, List<Integer> controleDeck){
+        int indexCarta = controleDeck.get(0);
+        controleDeck.remove(0);
+        hand.add(deck[indexCarta]);
+    }
+    private void getImages(List<Carta> handView){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-
-        //cardsPictures.add(playerCards.get(2).indexOf(1).);
-//        for (int i = 0; i < handView.size() ; i++) {
-//            cardsPictures.add(handView.get(i).toString());
-//        }
-
-
-        cardsPictures.add("https://i.redd.it/qn7f9oqu7o501.jpg");
-        cardsPictures.add("https://i.redd.it/j6myfqglup501.jpg");
-        cardsPictures.add("https://i.redd.it/0h2gm1ix6p501.jpg");
-        cardsPictures.add("https://i.redd.it/k98uzl68eh501.jpg");
-        cardsPictures.add("https://i.redd.it/glin0nwndo501.jpg");
-        cardsPictures.add("https://i.redd.it/obx4zydshg601.jpg");
-        cardsPictures.add("https://i.imgur.com/ZcLLrkY.jpg");
-
+        for (int i = 0; i < handView.size() ; i++) {
+            cardsPictures.add(handView.get(i).getImagem());
+        }
         initRecyclerView();
-
     }
 
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview");
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerViewId);
         recyclerView.setLayoutManager(layoutManager);

@@ -19,10 +19,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "RecyclerViewAdapter";
 
     //vars
-    private ArrayList <String> cardsPictures = new ArrayList<>();
+    private ArrayList <Integer> cardsPictures = new ArrayList<>();
     private Context mContext;
 
-    public RecyclerViewAdapter(ArrayList<String> cardsPictures, Context mContext) {
+    public RecyclerViewAdapter(ArrayList<Integer> cardsPictures, Context mContext) {
         this.cardsPictures = cardsPictures;
         this.mContext = mContext;
     }
@@ -45,7 +45,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked on an image: " + cardsPictures.get(position));
-                //Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -60,7 +60,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ViewHolder(View itemView) {
             super(itemView);
-            imageViewCarta = itemView.findViewById(R.id.imageViewCardId2);
+            imageViewCarta = itemView.findViewById(R.id.imageViewCardId);
         }
     }
 }
