@@ -15,7 +15,9 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uno.unisal.com.uno.classes.Carta;
 
@@ -26,28 +28,15 @@ public class JogoActivity extends Activity {
     private int nPlayers = 4;
     private int card;
     Carta[] deck = new Carta[108];
-    //ArrayList<Integer> players = new ArrayList<>();
-    List<Integer> playerNumCards = new ArrayList<>();
-    /*
-    [18:58, 6/4/2018] Felipe Lucas: com isso vc garante a consistencia de chave valor, crescendo a N usuários sem precisar se preocupar com a implementação
-    [18:59, 6/4/2018] Felipe Lucas: Map<Integer, list<Carta> = HashMap();
-    [18:59, 6/4/2018] Felipe Lucas: Map<Integer, list<Carta> cartasPorUser
-    [18:59, 6/4/2018] Felipe Lucas: cartasPorUser.put(chaveDoUsuario, newArraylist());
-    [18:59, 6/4/2018] Felipe Lucas: Adc um novo usuário
-    [19:00, 6/4/2018] Felipe Lucas: List<Cartas> cartasDoZequinha = cartasPorUser.get(chaveDoZequinha);
-    [19:00, 6/4/2018] Felipe Lucas: Por ser uma referencia de memória, o que vc fizer na lista do zequinha vai refletir na lista do mapa
-    [19:00, 6/4/2018] Felipe Lucas: WOOOOOOOOOOOOOOOOOOOOOW
-    [19:00, 6/4/2018] Felipe Lucas: topzera?
-     */
-    List<List<Carta>> playerCards = new ArrayList<List<Carta>>();
-    ArrayList<Integer> controleDeck = new ArrayList<>();
+    List<Integer> controleDeck = new ArrayList<>();
     private ArrayList <String> mImageUrls = new ArrayList<>();
+    Map<Integer, List<Carta>> playerCards =  new HashMap<Integer, List<Carta>>();
+    //List<List<Carta>> playerCards= new ArrayList<List<Carta>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jogo);
-
 
         deck[0] = new Carta(R.drawable.blue_0, 0, "0", "blue");deck[1] = new Carta(R.drawable.blue_1, 1, "1", "blue");deck[2] = new Carta(R.drawable.blue_1, 2, "1", "blue");
         deck[3] = new Carta(R.drawable.blue_2, 3, "2", "blue");deck[4] = new Carta(R.drawable.blue_2, 4, "2", "blue");deck[5] = new Carta(R.drawable.blue_3, 5, "3", "blue");
@@ -92,8 +81,8 @@ public class JogoActivity extends Activity {
         embaralhar();
         LinearLayout scrollViewGallery = findViewById(R.id.scrollViewGalleryId);
         LayoutInflater inflater = LayoutInflater.from(this);
+        iniciar();
         //iniciar(scrollViewGallery, inflater);
-        iniciar()
         //jogarCarta(scrollViewGallery, inflater);
         //novo
         getImages();
@@ -109,31 +98,32 @@ public class JogoActivity extends Activity {
         Collections.shuffle(controleDeck);
     }
 
-//    public void iniciar(LinearLayout scrollViewGallery, LayoutInflater inflater){
-//        for (int i = 0; i <7 ; i++) {
-//            card = controleDeck.get(0);
-//            controleDeck.remove(0);
-//
-//            View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
-//            ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
-//            imageViewCard.setImageResource(deck[card].getImagem());
-//
-//            scrollViewGallery.addView(view);
-//        }
-//    }
+    public void iniciar(LinearLayout scrollViewGallery, LayoutInflater inflater){
+        for (int i = 0; i <7 ; i++) {
+            card = controleDeck.get(0);
+            controleDeck.remove(0);
+
+            View view = inflater.inflate(R.layout.item, scrollViewGallery, false);
+            ImageView imageViewCard = view.findViewById(R.id.imageViewCardId);
+            imageViewCard.setImageResource(deck[card].getImagem());
+
+            scrollViewGallery.addView(view);
+        }
+    }
 
     public void iniciar(){
         for (int i = 0; i < nPlayers ; i++) {
-            List<Carta> list = new ArrayList<>();
-            playerCards.add(list);
-            playerNumCards.add(7);
+            List<Carta> hand = new ArrayList<>();
             for (int j = 0; j < 7 ; j++) {
-                card = controleDeck.get(0);
+                int indexCarta = controleDeck.get(0);
                 controleDeck.remove(0);
-                playerCards.get(i).add(deck[card]);
+                hand.add(deck[indexCarta]);
             }
-
+            playerCards.put(i, hand);
         }
+
+        //List<Carta> mao = playerCards.get(2);
+
     }
 
 //    public void jogarCarta(final LinearLayout scrollViewGallery, LayoutInflater inflater){
@@ -152,7 +142,7 @@ public class JogoActivity extends Activity {
     private void getImages(){
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
 
-        mImageUrls.add("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg");
+        //ImageUrls.add(playerCards.get(2).indexOf(1));
 
         mImageUrls.add("https://i.redd.it/tpsnoz5bzo501.jpg");
 
