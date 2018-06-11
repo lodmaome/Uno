@@ -13,16 +13,19 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import uno.unisal.com.uno.classes.Carta;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
 
     private static final String TAG = "RecyclerViewAdapter";
 
     //vars
-    private ArrayList <Integer> cardsPictures = new ArrayList<>();
+    private List <Integer> cardsPictures = new ArrayList<>();
     private Context mContext;
 
-    public RecyclerViewAdapter(ArrayList<Integer> cardsPictures, Context mContext) {
+    public RecyclerViewAdapter(List<Integer> cardsPictures, Context mContext) {
         this.cardsPictures = cardsPictures;
         this.mContext = mContext;
     }
@@ -30,9 +33,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: called.");
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listview, parent, false);
-        return new ViewHolder((view));
+        View cardView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.layout_listview, parent, false);
+        return new ViewHolder((cardView));
     }
 
     @Override
@@ -41,11 +44,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .asBitmap()
                 .load(cardsPictures.get(position))
                 .into(holder.imageViewCarta);
+
         holder.imageViewCarta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked on an image: " + cardsPictures.get(position));
                 Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
+                //remover carta teste
+                //cardsPictures.remove(cardsPictures.get(position));
             }
         });
     }
@@ -54,6 +60,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         return cardsPictures.size();
     }
+
+    public void removeItem (int position){
+        cardsPictures.remove(position);
+        notifyItemRemoved(position);
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageViewCarta;
