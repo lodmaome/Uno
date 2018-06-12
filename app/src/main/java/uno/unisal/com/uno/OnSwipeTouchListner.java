@@ -7,12 +7,15 @@ import android.view.View;
 
 public class OnSwipeTouchListner implements View.OnTouchListener  {
 
-    public OnSwipeTouchListner(Context context){
+    private GestureDetector gestureDetector;
 
+    public OnSwipeTouchListner(Context context){
+        gestureDetector = new GestureDetector(context, new GestureListner());
     }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        return false;
+        return gestureDetector.onTouchEvent(event);
     }
 
     private class GestureListner extends GestureDetector.SimpleOnGestureListener{
@@ -27,11 +30,16 @@ public class OnSwipeTouchListner implements View.OnTouchListener  {
 
             if (Math.abs(diffy) > Math.abs(diffx)){
                 if (Math.abs(diffy) >  SWIPE_THRESHHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHHOLD){
-                    //onSwipeUp();
-
+                    if (diffy > 0) {
+                        onSwipeUp();
+                    }
                 }
             }
             return super.onFling(e1, e2, velocityX, velocityY);
         }
+    }
+
+    public void onSwipeUp() {
+
     }
 }

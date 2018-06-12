@@ -13,8 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +26,13 @@ import uno.unisal.com.uno.classes.Carta;
 
 public class JogoActivity extends Activity {
 //    private Button remove;
-    private Button draw;
+    private ImageView draw;
     private static final String TAG = "MainActivity";
     boolean play = true;
     private int nPlayers = 4;
     Carta[] deck = new Carta[108];
-    List<Integer> controleDeck = new ArrayList<>();
+    List<Integer> controlDeck = new ArrayList<>();
+    List<Integer> controlShuffle = new ArrayList<>();
     private ArrayList <Integer> cardsPictures = new ArrayList<>();
     Map<Integer, List<Carta>> playerCards =  new HashMap<Integer, List<Carta>>();
 
@@ -39,8 +42,7 @@ public class JogoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jogo);
 
-        //remove.findViewById(R.id.buttonRemoverId);
-        draw = findViewById(R.id.buttonAdId);
+        draw = (ImageView) findViewById(R.id.cardPileId);
 
         deck[0] = new Carta(R.drawable.blue_0, 0, "0", "blue");deck[1] = new Carta(R.drawable.blue_1, 1, "1", "blue");deck[2] = new Carta(R.drawable.blue_1, 2, "1", "blue");
         deck[3] = new Carta(R.drawable.blue_2, 3, "2", "blue");deck[4] = new Carta(R.drawable.blue_2, 4, "2", "blue");deck[5] = new Carta(R.drawable.blue_3, 5, "3", "blue");
@@ -83,30 +85,24 @@ public class JogoActivity extends Activity {
         deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black2");deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black2");
 
         startGame();
-        drawCard(playerCards.get(0));
+        //drawCard(playerCards.get(0));
         draw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawCard(playerCards.get(0));
+                //Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(JogoActivity.this, "PESCANDO:" + playerCards.get(0).size(), Toast.LENGTH_SHORT).show();
                 showCards(playerCards.get(0));
             }
         });
 
-//        while (play){
-//            play = false;
-//        }
+        while (play){
+            play = false;
+        }
 
         //onCreate end
     }
 
-    //clear the list and shuffle
-    public void shuffleDeck(){
-        controleDeck.clear();
-        for (int i = 0; i < 108 ; i++) {
-            controleDeck.add(i);
-        }
-        Collections.shuffle(controleDeck);
-    }
 
     //iniciar jogo
     public void startGame(){
@@ -115,8 +111,8 @@ public class JogoActivity extends Activity {
         for (int i = 0; i < nPlayers ; i++) {
             List<Carta> hand = new ArrayList<>();
             for (int j = 0; j < 7 ; j++) {
-                indexCarta = controleDeck.get(0);
-                controleDeck.remove(0);
+                indexCarta = controlDeck.get(0);
+                controlDeck.remove(0);
                 hand.add(deck[indexCarta]);
             }
             playerCards.put(i, hand);
@@ -125,11 +121,40 @@ public class JogoActivity extends Activity {
         showCards(playerCards.get(0));
     }
 
+    //clear the list and shuffle
+    public void shuffleDeck(){
+        controlDeck.clear();
+        for (int i = 0; i < 108 ; i++) {
+            controlDeck.add(i);
+        }
+        Collections.shuffle(controlDeck);
+    }
+
+    public void reShuffleDeck (Map<Integer, List<Carta>> playerCards){
+        controlDeck.clear();
+        controlShuffle.clear();
+        for (int i = 0; i < 108 ; i++) {
+            controlDeck.add(i);
+        }
+        for (int i = 0; i < nPlayers; i++) {
+            for (int j = 0; j < playerCards.get(i).size() ; j++) {
+                controlShuffle.add(playerCards.get(i).get(j).getId());
+            }
+        }
+
+        //EXEMPLO: Arrays.sort(array, Collections.reverseOrder());
+        //controlShuffle.sort();
+        //ArrayUtils.rever
+        Collections.shuffle(controlDeck);
+    }
+
+
+
     public void drawCard(List<Carta> hand){
-        int indexCarta = controleDeck.get(0);
-        controleDeck.remove(0);
+        int indexCarta = controlDeck.get(0);
+        controlDeck.remove(0);
         hand.add(deck[indexCarta]);
-        showCards(hand);
+        //showCards(hand);
     }
 
     private void showCards(List<Carta> handView){
@@ -138,7 +163,7 @@ public class JogoActivity extends Activity {
         for (int i = 0; i < handView.size(); i++) {
             cardsPictures.add(handView.get(i).getImagem());
         }
-        //initRecyclerView();
+        initRecyclerView();
     }
 
     private void initRecyclerView(){
@@ -150,3 +175,33 @@ public class JogoActivity extends Activity {
         recyclerView.setAdapter(adapter);
     }
 }
+
+//    public static void main(String[] args) {
+//        // TODO Auto-generated method stub
+//        int [] vetor = {4,8,2,3};
+//
+//        sortHighest(vetor);
+//
+//        for (int i = 0; i < vetor.length; i++) {
+//            System.out.println(vetor[i]);
+//        }
+//    }
+//
+//
+//
+//    static void sortHighest (int [] vetor) {
+//        Arrays.sort(vetor);
+//        int a = vetor.length;
+//        int j = 0;
+//        int [] vetor2 = new int[a];
+//        for (int i = vetor.length; i >= 0; i--) {
+//            vetor2[j] = vetor[i];
+//            j++;
+//        }
+//
+//        for (int i = 0; i < vetor.length; i++) {
+//            vetor[i] = vetor2[i];
+//        }
+//
+//    }
+//}
