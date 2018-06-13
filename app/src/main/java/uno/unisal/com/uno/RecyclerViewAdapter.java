@@ -25,6 +25,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Carta> handView;
     private List <Integer> cardsPictures = new ArrayList<>();
     private Context mContext;
+    //gambiarra para pegar a carta da mesa
+    Carta played = JogoActivity.cardPlayed;
+    ImageView playedView = JogoActivity.cardPlayedView;
 
     public RecyclerViewAdapter(List<Carta> handView, List<Integer> cardsPictures, Context mContext) {
         this.handView = handView;
@@ -51,9 +54,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked on an image: " + cardsPictures.get(position));
-                Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
                 //remover carta teste
                 cardsPictures.remove(cardsPictures.get(position));
+                played = handView.get(position);
+                playedView.setImageResource(handView.get(position).getImage());
                 handView.remove(position);
             }
         });
