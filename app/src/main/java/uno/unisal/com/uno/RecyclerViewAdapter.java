@@ -22,10 +22,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "RecyclerViewAdapter";
 
     //vars
+    private List<Carta> handView;
     private List <Integer> cardsPictures = new ArrayList<>();
     private Context mContext;
 
-    public RecyclerViewAdapter(List<Integer> cardsPictures, Context mContext) {
+    public RecyclerViewAdapter(List<Carta> handView, List<Integer> cardsPictures, Context mContext) {
+        this.handView = handView;
         this.cardsPictures = cardsPictures;
         this.mContext = mContext;
     }
@@ -51,7 +53,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Log.d(TAG, "onClick: clicked on an image: " + cardsPictures.get(position));
                 Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
                 //remover carta teste
-                //cardsPictures.remove(cardsPictures.get(position));
+                cardsPictures.remove(cardsPictures.get(position));
+                handView.remove(position);
             }
         });
     }

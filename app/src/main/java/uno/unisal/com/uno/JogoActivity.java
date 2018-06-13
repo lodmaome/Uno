@@ -25,25 +25,36 @@ import java.util.Map;
 import uno.unisal.com.uno.classes.Carta;
 
 public class JogoActivity extends Activity {
-//    private Button remove;
-    private ImageView draw;
+    //caso dÊ na telha observar logs
     private static final String TAG = "MainActivity";
-    boolean play = true;
+    //carta do canto iferior direito
+    private ImageView draw;
+    //carta jogada, centro da mesa
+    private Carta cardPlayed;
+    //numero de jogadores será variavel, com sorte
     private int nPlayers = 4;
+    //armazena todas as cartas
     Carta[] deck = new Carta[108];
+    //array de controle para a distribuicao de cartas
     List<Integer> controlDeck = new ArrayList<>();
+    //caso seja necessario reembaralhar,  essa variavel armazena as cartas das maos dos jogadores. elas serao retiradas do controlDeck
     List<Integer> controlShuffle = new ArrayList<>();
+    //necessario como parametro para o recyclerViewAdapter, armazena apenas os ids das imagens;
     private ArrayList <Integer> cardsPictures = new ArrayList<>();
+    //mãos dos jogadores
     Map<Integer, List<Carta>> playerCards =  new HashMap<Integer, List<Carta>>();
-
+    //possivelmente parará o jogo
+    boolean play = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jogo);
 
+        //ligando os botoes
         draw = (ImageView) findViewById(R.id.cardPileId);
 
+        //declaracao de todas as cartas
         deck[0] = new Carta(R.drawable.blue_0, 0, "0", "blue");deck[1] = new Carta(R.drawable.blue_1, 1, "1", "blue");deck[2] = new Carta(R.drawable.blue_1, 2, "1", "blue");
         deck[3] = new Carta(R.drawable.blue_2, 3, "2", "blue");deck[4] = new Carta(R.drawable.blue_2, 4, "2", "blue");deck[5] = new Carta(R.drawable.blue_3, 5, "3", "blue");
         deck[6] = new Carta(R.drawable.blue_3, 6, "3", "blue");deck[7] = new Carta(R.drawable.blue_4, 7, "4", "blue");deck[8] = new Carta(R.drawable.blue_4, 8, "4", "blue");
@@ -117,7 +128,7 @@ public class JogoActivity extends Activity {
             }
             playerCards.put(i, hand);
         }
-        initRecyclerView();
+        initRecyclerView(playerCards.get(0));
         showCards(playerCards.get(0));
     }
 
@@ -158,21 +169,22 @@ public class JogoActivity extends Activity {
     }
 
     private void showCards(List<Carta> handView){
-        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        Log.d(TAG, "showing cards");
         cardsPictures.clear();
         for (int i = 0; i < handView.size(); i++) {
             cardsPictures.add(handView.get(i).getImagem());
         }
-        initRecyclerView();
+        initRecyclerView(handView);
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView(List<Carta> handView){
         Log.d(TAG, "initRecyclerView: init recyclerview");
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerViewId);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(cardsPictures, this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(handView, cardsPictures, this);
         recyclerView.setAdapter(adapter);
+
     }
 }
 
