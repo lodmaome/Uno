@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uno.unisal.com.uno.classes.Carta;
+import uno.unisal.com.uno.util.CallableStatement;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
 
@@ -25,14 +26,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Carta> handView;
     private List <Integer> cardsPictures = new ArrayList<>();
     private Context mContext;
+    private CallableStatement callable;
+
     //gambiarra para pegar a carta da mesa
     Carta played = JogoActivity.cardPlayed;
     ImageView playedView = JogoActivity.cardPlayedView;
 
-    public RecyclerViewAdapter(List<Carta> handView, List<Integer> cardsPictures, Context mContext) {
+    public RecyclerViewAdapter(List<Carta> handView, List<Integer> cardsPictures, Context mContext, CallableStatement callable) {
         this.handView = handView;
         this.cardsPictures = cardsPictures;
         this.mContext = mContext;
+        this.callable = callable;
     }
 
     @Override
@@ -43,6 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder((cardView));
     }
 
+    //toque em carquer carta
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Glide.with(mContext)
@@ -56,10 +61,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Log.d(TAG, "onClick: clicked on an image: " + cardsPictures.get(position));
                 //Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
                 //remover carta teste
-                cardsPictures.remove(cardsPictures.get(position));
-                played = handView.get(position);
-                playedView.setImageResource(handView.get(position).getImage());
-                handView.remove(position);
+                if (callable.canPlayCard(position)) {
+                    cardsPictures.remove(position);
+                    played = handView.get(position);
+                    playedView.setImageResource(handView.get(position).getImage());
+                    handView.remove(position);
+                    callable.callGameLoop();
+                }
             }
         });
     }

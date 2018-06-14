@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Random;
 
 import uno.unisal.com.uno.classes.Carta;
+import uno.unisal.com.uno.util.CallableStatement;
 
 public class JogoActivity extends Activity {
     //caso de na telha observar logs
@@ -57,9 +58,10 @@ public class JogoActivity extends Activity {
     //mãos dos jogadores
     Map<Integer, List<Carta>> playerCards =  new HashMap<Integer, List<Carta>>();
 
-    //possivelmente parará o jogo
-    boolean play = false;
+    RecyclerView recyclerView;
+    RecyclerViewAdapter adapter;
 
+    int sizePlayerHand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,19 +111,19 @@ public class JogoActivity extends Activity {
         deck[23] = new Carta(R.drawable.blue_skip, 23, "skip", "blue", 20);
         deck[24] = new Carta(R.drawable.blue_skip, 24, "skip", "blue", 20);
         deck[25] = new Carta(R.drawable.yellow_0, 25, "0", "yellow", 0);
-        deck[26] = new Carta(R.drawable.yellow_0, 26, "1", "yellow", 1);
+        deck[26] = new Carta(R.drawable.yellow_1, 26, "1", "yellow", 1);
         deck[27] = new Carta(R.drawable.yellow_1, 27, "1", "yellow", 1);
-        deck[28] = new Carta(R.drawable.yellow_1, 28, "2", "yellow", 2);
+        deck[28] = new Carta(R.drawable.yellow_2, 28, "2", "yellow", 2);
         deck[29] = new Carta(R.drawable.yellow_2, 29, "2", "yellow", 2);
-        deck[30] = new Carta(R.drawable.yellow_2, 30, "3", "yellow", 3);
+        deck[30] = new Carta(R.drawable.yellow_3, 30, "3", "yellow", 3);
         deck[31] = new Carta(R.drawable.yellow_3, 31, "3", "yellow", 3);
-        deck[32] = new Carta(R.drawable.yellow_3, 32, "4", "yellow", 4);
+        deck[32] = new Carta(R.drawable.yellow_4, 32, "4", "yellow", 4);
         deck[33] = new Carta(R.drawable.yellow_4, 33, "4", "yellow", 4);
-        deck[34] = new Carta(R.drawable.yellow_4, 34, "5", "yellow", 5);
+        deck[34] = new Carta(R.drawable.yellow_5, 34, "5", "yellow", 5);
         deck[35] = new Carta(R.drawable.yellow_5, 35, "5", "yellow", 5);
-        deck[36] = new Carta(R.drawable.yellow_5, 36, "6", "yellow", 6);
+        deck[36] = new Carta(R.drawable.yellow_6, 36, "6", "yellow", 6);
         deck[37] = new Carta(R.drawable.yellow_6, 37, "6", "yellow", 6);
-        deck[38] = new Carta(R.drawable.yellow_6, 38, "7", "yellow", 7);
+        deck[38] = new Carta(R.drawable.yellow_7, 38, "7", "yellow", 7);
         deck[39] = new Carta(R.drawable.yellow_7, 39, "7", "yellow", 7);
         deck[40] = new Carta(R.drawable.yellow_8, 40, "8", "yellow", 8);
         deck[41] = new Carta(R.drawable.yellow_8, 41, "8", "yellow", 8);
@@ -192,75 +194,95 @@ public class JogoActivity extends Activity {
         deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black2", 40);
         deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black2", 40);
 
-
-        startGame();
-
-        while (play){
-            if(playerTurn == 0){
-                int sizePlayerHand = playerCards.get(0).size();
-                Toast.makeText(JogoActivity.this, "Sua VEZ!", Toast.LENGTH_SHORT).show();
-                while(sizePlayerHand == playerCards.get(0).size()){
-                    // so prendendo o puto num loop;
-                }
-                showCards(playerCards.get(0));
-
-            } else {
-                if(playCard(playerCards.get(playerTurn))){
-                    putOnTheTable(cardToBePlayed);
-                    playerCards.get(playerTurn).remove(cardToBePlayedPosition);
-                } else {
-                    drawCard(playerCards.get(playerTurn));
-                }
-
-            }
-
-            cardToBePlayed = null;
-            cardToBePlayedPosition = -1;
-
-            if (endGame(playerCards.get(playerTurn))) {
-                Toast.makeText(JogoActivity.this, "O jogador: " + playerTurn+1 + " venceu!", Toast.LENGTH_SHORT).show();
-                play = true;
-            } else {
-                if(playerTurn == 3){
-                    playerTurn = 0;
-                } else {
-                    playerTurn += 1;
-                }
-            }
-            play = false;
-        }
-
         //onCreate end
     }
 
-    //finalizar jogo
-    public boolean endGame(List<Carta> hand){
-        if (hand.size() == 0)
-            play = true;
-        return play;
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        startGame();
+
+        sizePlayerHand = playerCards.get(0).size();
+
+        gameLoop();
+
+
+    }
+
+    private void gameLoop() {
+        //loop ate que alguem fique sem cartas
+        //vez do jogador
+        if(adapter!=null){
+            adapter.notifyDataSetChanged();
+        }
+
+        if(playerTurn == 0){
+            Toast.makeText(JogoActivity.this, "Sua vez!", Toast.LENGTH_SHORT).show();
+            if(sizePlayerHand != playerCards.get(0).size()){
+                // prender o codigo ate o jogador pescar ou jogar
+                showCards(playerCards.get(0));
+                sizePlayerHand = playerCards.get(0).size();
+            }
+            resetPlay();
+        } else {
+            Toast.makeText(JogoActivity.this, "CPU!", Toast.LENGTH_SHORT).show();
+            //turno do computador
+            //essa funcao verifica (boolean) se existe uma carta para jogar
+            boolean canPlayCard = canPlayCard();
+            if(canPlayCard){
+                putOnTheTable(cardToBePlayed);
+                playerCards.get(playerTurn).remove(cardToBePlayedPosition);
+            } else {
+                drawCard(playerCards.get(playerTurn));
+            }
+            resetPlay();
+            this.gameLoop();
+        }
+
+
+    }
+
+    private void resetPlay() {
+        //resetar a carta que sera jogada
+        cardToBePlayed = null;
+        cardToBePlayedPosition = -1;
+
+        if (endGame(playerCards.get(playerTurn))) {
+            Toast.makeText(JogoActivity.this, "O jogador: " + playerTurn+1 + " venceu!", Toast.LENGTH_SHORT).show();
+        } else {
+            if(playerTurn == 3){
+                playerTurn = 0;
+            } else {
+                playerTurn++;
+            }
+        }
     }
 
     //jogadas simples
     public boolean playCard(List<Carta> hand){
         boolean isGoingToPlay = false;
-
         for (int i = 0; i < hand.size(); i++) {
             if(hand.get(i).getSymbol().equals(cardPlayed.getSymbol()) || hand.get(i).getColor().equals(cardPlayed.getColor())){
                 if(cardToBePlayed == null){
                     cardToBePlayed = hand.get(i);
                     cardToBePlayedPosition = i;
                     isGoingToPlay = true;
-                 } else {
+                } else {
                     if (hand.get(i).getValue() > cardToBePlayed.getValue()) {
                         cardToBePlayed = hand.get(i);
                         cardToBePlayedPosition = i;
                     }
                 }
-
             }
         }
 
         return isGoingToPlay;
+    }
+
+    //finalizar jogo
+    public boolean endGame(List<Carta> hand){
+        return hand.isEmpty();
     }
 
     //shuffle para o começo do jogo
@@ -354,7 +376,7 @@ public class JogoActivity extends Activity {
     }
 
     //exibir mão do jogador
-    private void showCards(List<Carta> handView){
+    public void showCards(List<Carta> handView){
         Log.d(TAG, "showing cards");
         cardsPictures.clear();
         for (int i = 0; i < handView.size(); i++) {
@@ -367,13 +389,33 @@ public class JogoActivity extends Activity {
     private void initRecyclerView(List<Carta> handView){
         Log.d(TAG, "initRecyclerView: init recyclerview");
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewId);
+        recyclerView = findViewById(R.id.recyclerViewId);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(handView, cardsPictures, this);
-        recyclerView.setAdapter(adapter);
+        adapter = new RecyclerViewAdapter(handView, cardsPictures, this, new CallableStatement() {
+            @Override
+            public void callGameLoop() {
+                validateGameLoopCall();
+            }
 
+            @Override
+            public boolean canPlayCard(int position) {
+                Carta carta = playerCards.get(0).get(position);
+                if(carta != null){
+                    return carta.getSymbol().equals(cardPlayed.getSymbol()) || carta.getColor().equals(cardPlayed.getColor());
+                }
+                return false;
+            }
+        });
+        recyclerView.setAdapter(adapter);
     }
 
+    private void validateGameLoopCall(){
+        gameLoop();
+    }
+
+    private boolean canPlayCard() {
+        return playCard(playerCards.get(playerTurn));
+    }
 
 
 }

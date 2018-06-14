@@ -87,8 +87,17 @@ public class Carta extends Application{
 
     @Override
     public String toString() {
-        return toString();
+        return super.toString();
     }
+
+
+    public boolean equals(Object o){
+        if(o instanceof Carta){
+            return ((Carta) o).color.equals(this.color) && ((Carta) o).symbol.equals(this.symbol);
+        }
+        return false;
+    }
+
 
 
 }
