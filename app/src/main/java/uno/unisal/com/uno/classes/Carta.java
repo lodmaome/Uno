@@ -2,21 +2,22 @@ package uno.unisal.com.uno.classes;
 
 import android.app.Application;
 import android.content.res.Configuration;
-import android.media.Image;
 
 
 public class Carta extends Application{
 
-    private int imagem;
+    private int image;
     private int id;
-    private String caracter;
-    private String cor;
+    private String symbol;
+    private String color;
+    private int value;
 
-    public Carta(int imagem, int id, String caracter, String cor) {
-        this.imagem = imagem;
+    public Carta(int image, int id, String symbol, String color, int value) {
+        this.image = image;
         this.id = id;
-        this.caracter = caracter;
-        this.cor = cor;
+        this.symbol = symbol;
+        this.color = color;
+        this.value = value;
     }
 
     @Override
@@ -44,13 +45,12 @@ public class Carta extends Application{
         super.onTrimMemory(level);
     }
 
-
-    public int getImagem() {
-        return imagem;
+    public int getImage() {
+        return image;
     }
 
-    public void setImagem(int imagem) {
-        this.imagem = imagem;
+    public void setImage(int image) {
+        this.image = image;
     }
 
     public int getId() {
@@ -61,26 +61,43 @@ public class Carta extends Application{
         this.id = id;
     }
 
-    public String getCaracter() {
-        return caracter;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setCaracter(String caracter) {
-        this.caracter = caracter;
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
-    public String getCor(String verde) {
-        return cor;
+    public String getColor() {
+        return color;
     }
 
-    public void setCor(String cor) {
-        this.cor = cor;
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 
     @Override
     public String toString() {
-        return toString();
+        return super.toString();
     }
+
+
+    public boolean equals(Object o){
+        if(o instanceof Carta){
+            return ((Carta) o).color.equals(this.color) && ((Carta) o).symbol.equals(this.symbol);
+        }
+        return false;
+    }
+
 
 
 }
