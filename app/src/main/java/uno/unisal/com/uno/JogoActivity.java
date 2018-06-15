@@ -36,6 +36,17 @@ public class JogoActivity extends Activity {
     private TextView numberCards3;
     private TextView numberCards4;
 
+    //maos dos oponentes
+    private ImageView cardsTop;
+    private ImageView cardsRight;
+    private ImageView cardsLeft;
+
+    //imagens selecao de cor
+    private ImageView colorRed;
+    private ImageView colorGreen;
+    private ImageView colorBlue;
+    private ImageView colorYellow;
+
     //carta jogada, centro da mesa
     static public Carta cardPlayed;
     static public ImageView cardPlayedView;
@@ -49,6 +60,7 @@ public class JogoActivity extends Activity {
 
     //turno
     private int playerTurn;
+    private boolean order = true;
     //carta que sera jogada
     public Carta cardToBePlayed = null;
     public int cardToBePlayedPosition = 0;
@@ -78,10 +90,21 @@ public class JogoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jogo);
 
+        startTable();
+        createDeck();
+        startGame();
+        gameLoop();
+    }
+
+    private void startTable() {
         //ligando os botoes
         draw = (ImageView) findViewById(R.id.cardPileId);
         cardPlayedView = (ImageView) findViewById(R.id.cardPlayedId);
         cardPlayedView.setImageResource(R.drawable.card_back);
+
+        cardsTop = findViewById(R.id.cardTopId);
+        cardsRight = findViewById(R.id.cardRightId);
+        cardsLeft = findViewById(R.id.cardLeftId);
 
         numberCards0 = findViewById(R.id.textCardNumber0);
         numberCards1 = findViewById(R.id.textCardNumber1);
@@ -89,22 +112,23 @@ public class JogoActivity extends Activity {
         numberCards3 = findViewById(R.id.textCardNumber3);
         numberCards4 = findViewById(R.id.textCardNumber4);
 
+        //botoes da troca de cor
+        colorRed = findViewById(R.id.chooseColorRedId);
+        colorGreen = findViewById(R.id.chooseColorGreenId);
+        colorBlue = findViewById(R.id.chooseColorBlueId);
+        colorYellow = findViewById(R.id.chooseColorYellowId);
+
         //botao de pesca
         draw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawCard(playerCards.get(0));
-                Toast.makeText(JogoActivity.this, "PESCANDO:" + playerCards.get(0).size(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(JogoActivity.this, "PESCANDO:" + playerCards.get(0).size(), Toast.LENGTH_SHORT).show();
                 showCards(playerCards.get(0));
                 gameLoop();
             }
         });
-
-        createDeck();
-        startGame();
-        gameLoop();
     }
-
 
     private void gameLoop() {
         //loop ate que alguem fique sem cartas
@@ -140,24 +164,48 @@ public class JogoActivity extends Activity {
         //resetar a carta que sera jogada
         cardToBePlayed = null;
         cardToBePlayedPosition = -1;
+        //atualiza a mao de todos
+        numberOfCards();
+        cardsInHand();
 
+        //se o jogo acabou
         if (endGame(playerCards.get(playerTurn))) {
             Toast.makeText(JogoActivity.this, "O jogador: " + playerTurn+1 + " venceu!", Toast.LENGTH_SHORT).show();
             //startActivity(new Intent(IntroActivity.this, LoginActivity.class));
         } else {
-            numberOfCards();
+
             if(cardPlayed.getSymbol().equals("skip")){
                 playerTurn++;
             }
-            if(playerTurn == 3){
-                playerTurn = 0;
-                drawExtra();
-            } else if (playerTurn > 3){
-                playerTurn = 1;
-                drawExtra();
-            }else {
-                playerTurn++;
-                drawExtra();
+
+            if(cardPlayed.getSymbol().equals("reverse")){
+                order = !order;
+            }
+            //se estiver no sentido horario
+            if(order){
+                if(playerTurn == 3){
+                    playerTurn = 0;
+                    drawExtra();
+                } else if (playerTurn > 3){
+                    playerTurn = 1;
+                    drawExtra();
+                }else {
+                    playerTurn++;
+                    drawExtra();
+                }
+            } else {
+                //sentido antihorario
+                if(playerTurn == 0){
+                    playerTurn = 3;
+                    drawExtra();
+                } else if (playerTurn < 0){
+                    playerTurn = 2;
+                    drawExtra();
+                }else {
+                    playerTurn--;
+                    drawExtra();
+                }
+
             }
         }
     }
@@ -343,6 +391,68 @@ public class JogoActivity extends Activity {
         numberCards2.setText(String.valueOf(playerCards.get(2).size()));
         numberCards3.setText(String.valueOf(playerCards.get(3).size()));
         numberCards4.setText(String.valueOf(controlDeck.size()));
+    }
+
+    private void cardsInHand(){
+        int a = playerCards.get(1).size();
+        int b = playerCards.get(2).size();
+        int c = playerCards.get(3).size();
+
+        switch (a) {
+            case 4:
+                cardsLeft.setImageResource(R.drawable.cardsleft4);
+                break;
+            case 3:
+                cardsLeft.setImageResource(R.drawable.cardsleft3);
+                break;
+            case 2:
+                cardsLeft.setImageResource(R.drawable.cardsleft2);
+                break;
+            case 1:
+                cardsLeft.setImageResource(R.drawable.cardsleft1);
+                break;
+            default:
+                cardsLeft.setImageResource(R.drawable.cardsleft5);
+                break;
+        }
+
+//        if(playerCards.get(1).size() > 4){
+//            cardsLeft.setImageResource(R.drawable.cardsleft5);
+//        }else if(playerCards.get(1).size() == 4){
+//            cardsLeft.setImageResource(R.drawable.cardsleft4);
+//        }else if(playerCards.get(1).size() == 3){
+//            cardsLeft.setImageResource(R.drawable.cardsleft3);
+//        }else if(playerCards.get(1).size() == 2){
+//            cardsLeft.setImageResource(R.drawable.cardsleft2);
+//        } else if(playerCards.get(1).size() == 1){
+//            cardsLeft.setImageResource(R.drawable.cardsleft1);
+//        }
+
+        if(playerCards.get(2).size() > 4){
+            cardsLeft.setImageResource(R.drawable.cardstop5);
+        }else if(playerCards.get(2).size() == 4){
+            cardsLeft.setImageResource(R.drawable.cardstop4);
+        }else if(playerCards.get(2).size() == 3){
+            cardsLeft.setImageResource(R.drawable.cardstop3);
+        }else if(playerCards.get(2).size() == 2){
+            cardsLeft.setImageResource(R.drawable.cardstop2);
+        } else if(playerCards.get(2).size() == 1){
+            cardsLeft.setImageResource(R.drawable.cardstop1);
+        }
+
+        if(playerCards.get(3).size() > 4){
+            cardsLeft.setImageResource(R.drawable.cardsright5);
+        }else if(playerCards.get(3).size() == 4){
+            cardsLeft.setImageResource(R.drawable.cardsright4);
+        }else if(playerCards.get(3).size() == 3){
+            cardsLeft.setImageResource(R.drawable.cardsright3);
+        }else if(playerCards.get(3).size() == 2){
+            cardsLeft.setImageResource(R.drawable.cardsright2);
+        } else if(playerCards.get(3).size() == 1){
+            cardsLeft.setImageResource(R.drawable.cardsright1);
+        }
+
+
     }
 
     private void createDeck() {

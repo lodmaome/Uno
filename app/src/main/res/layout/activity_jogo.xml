@@ -7,210 +7,328 @@
     android:background="#FF596EF7"
     tools:context=".JogoActivity">
 
-    <!-- baralho canto inferior direito -->
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="57.6dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:backgroundTint="@android:color/transparent"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="10dp"
-        app:cardMaxElevation="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    <!--layout da mesa principal-->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutTableId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0081CDF7"
+        android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/cardPileId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/card_back_alt" />
-    </android.support.v7.widget.CardView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewId"
+            android:layout_width="370dp"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"></android.support.v7.widget.RecyclerView>
 
-    <!--Carta no meio da tela -->
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView2"
-        android:layout_width="57.6dp"
-        android:layout_height="80dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="10dp"
-        app:cardMaxElevation="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <Button
+            android:id="@+id/textButtonId"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="23.5dp"
+            android:text="Desafio"
+            android:textColor="#000"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cardsRight"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.498" />
 
-        <ImageView
-            android:id="@+id/cardPlayedId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/card_back" />
-    </android.support.v7.widget.CardView>
-
-    <!-- mao do jogador -->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewId"
-        android:layout_width="370dp"
-        android:layout_height="100dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"></android.support.v7.widget.RecyclerView>
-
-    <!-- botao para passar turno, dizer uno ou desafiar -->
-    <Button
-        android:visibility="invisible"
-        android:id="@+id/textButtonId"
-        android:textStyle="bold"
-        android:layout_width="90dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginRight="23.5dp"
-        android:text="Desafio"
-        android:textColor="#000"
-        android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cardView4"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
-
-    <!-- cartas direita -->
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView4"
-        android:layout_width="80dp"
-        android:layout_height="120dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginRight="50dp"
-        android:backgroundTint="@android:color/transparent"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="10dp"
-        app:cardMaxElevation="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498">
-
-        <ImageView
-            android:id="@+id/cardRightId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/cardsright4" />
-    </android.support.v7.widget.CardView>
-
-    <!-- cartas esquerda -->
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView3"
-        android:layout_width="80dp"
-        android:layout_height="120dp"
-        android:layout_marginLeft="00dp"
-        android:layout_marginStart="50dp"
-        android:backgroundTint="@android:color/transparent"
-        app:cardElevation="10dp"
-        app:cardMaxElevation="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498">
-
-        <ImageView
-            android:id="@+id/cardLeftId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <android.support.v7.widget.CardView
+            android:id="@+id/deckDraw"
+            android:layout_width="57.6dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="40dp"
             android:backgroundTint="@android:color/transparent"
-            android:src="@drawable/cardsleft5" />
-    </android.support.v7.widget.CardView>
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- cartas cima -->
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView5"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@android:color/transparent"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="10dp"
-        app:cardMaxElevation="30dp"
+            <ImageView
+                android:id="@+id/cardPileId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/card_back_alt" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardInTheMiddle"
+            android:layout_width="57.6dp"
+            android:layout_height="80dp"
+            android:forceHasOverlappingRendering="false"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/cardPlayedId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/card_back" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardsRight"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:backgroundTint="@android:color/transparent"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.498">
+
+            <ImageView
+                android:id="@+id/cardRightId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/cardsright5" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardsLeft"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="00dp"
+            android:layout_marginStart="50dp"
+            android:backgroundTint="@android:color/transparent"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.498">
+
+            <ImageView
+                android:id="@+id/cardLeftId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/cardsleft5" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardsTop"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@android:color/transparent"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/cardTopId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cardstop5"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/textCardNumber0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="44dp"
+            android:background="@android:color/transparent"
+            android:text="aa"
+            android:textColor="#F00"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerViewId"
+            app:layout_constraintStart_toEndOf="@+id/cardsLeft" />
+
+        <TextView
+            android:id="@+id/textCardNumber1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:layout_marginStart="82dp"
+            android:background="@android:color/transparent"
+            android:text="aa"
+            android:textColor="#F00"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/cardsLeft"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textCardNumber2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="52dp"
+            android:background="@android:color/transparent"
+            android:text="aa"
+            android:textColor="#F00"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/cardsTop"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textCardNumber3"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="73dp"
+            android:background="@android:color/transparent"
+            android:text="aa"
+            android:textColor="#F00"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/cardsRight"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/textCardNumber4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="64dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:text="aa"
+            android:textColor="#F00"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <!--layout da selecao de cor-->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutChooseColorId"
+        android:layout_width="500dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="8dp"
+        android:background="#FF9EBCF6"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.31">
 
-        <ImageView
-            android:id="@+id/cardTopId"
+        <TextView
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/cardstop3" />
-    </android.support.v7.widget.CardView>
+            android:layout_marginBottom="50dp"
+            android:fontFamily="serif"
+            android:text="Escolha a cor:"
+            android:textColor="#000"
+            android:textSize="40dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/cardViewGreen"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textCardNumber0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="44dp"
-        android:text="aa"
-        android:textSize="20dp"
-        android:textColor="#F00"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewId"
-        app:layout_constraintStart_toEndOf="@+id/cardView3" />
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewRed"
+            android:layout_width="57.6dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="74dp"
+            android:layout_marginStart="50dp"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@android:color/transparent"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/textCardNumber1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:layout_marginStart="82dp"
-        android:background="@android:color/transparent"
-        android:text="aa"
-        android:textColor="#F00"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView3"
-        app:layout_constraintStart_toStartOf="parent" />
+            <ImageView
+                android:id="@+id/chooseColorRedId"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/choosecolorred" />
+        </android.support.v7.widget.CardView>
 
-    <TextView
-        android:id="@+id/textCardNumber2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="52dp"
-        android:background="@android:color/transparent"
-        android:text="aa"
-        android:textColor="#F00"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/cardView5"
-        app:layout_constraintTop_toTopOf="parent" />
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewGreen"
+            android:layout_width="57.6dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="74dp"
+            android:layout_marginStart="50dp"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@android:color/transparent"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardViewRed">
 
-    <TextView
-        android:id="@+id/textCardNumber3"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="73dp"
-        android:background="@android:color/transparent"
-        android:text="aa"
-        android:textColor="#F00"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView4"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <ImageView
+                android:id="@+id/chooseColorGreenId"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/choosecolorgreen" />
+        </android.support.v7.widget.CardView>
 
-    <TextView
-        android:id="@+id/textCardNumber4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        android:layout_marginEnd="16dp"
-        android:background="@android:color/transparent"
-        android:text="aa"
-        android:textColor="#F00"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewBlue"
+            android:layout_width="57.6dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="74dp"
+            android:layout_marginStart="50dp"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@android:color/transparent"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardViewGreen">
 
+            <ImageView
+                android:id="@+id/chooseColorBlueId"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/choosecolorblue" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewGreenYellow"
+            android:layout_width="57.6dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="74dp"
+            android:layout_marginStart="50dp"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@android:color/transparent"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardViewBlue">
+
+            <ImageView
+                android:id="@+id/chooseColorYellowId"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/choosecoloryellow" />
+        </android.support.v7.widget.CardView>
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
