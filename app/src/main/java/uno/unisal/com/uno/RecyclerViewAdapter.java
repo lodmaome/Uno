@@ -31,6 +31,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     //gambiarra para pegar a carta da mesa
     Carta played = JogoActivity.cardPlayed;
     ImageView playedView = JogoActivity.cardPlayedView;
+    ImageView botCard = JogoActivity.slideBot;
+    int turn = JogoActivity.playerTurn;
+    boolean order2 = JogoActivity.order;
+
 
     public RecyclerViewAdapter(List<Carta> handView, List<Integer> cardsPictures, Context mContext, CallableStatement callable) {
         this.handView = handView;
@@ -64,8 +68,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if (callable.canPlayCard(position)) {
                     cardsPictures.remove(position);
                     played = handView.get(position);
+                    botCard.setVisibility(View.VISIBLE);
+                    botCard.setImageResource(played.getImage());
                     playedView.setImageResource(handView.get(position).getImage());
                     handView.remove(position);
+                    if(played.getSymbol().equals("skip")){
+                        turn++;
+                    }
+
+                    if(played.getSymbol().equals("reverse")){
+                        order2 = !order2;
+                    }
+
                     callable.callGameLoop();
                 } else{
                     Toast.makeText(mContext, "Play a " + played.getColor().toString() + " card or any " + played.getSymbol().toString() + ".", Toast.LENGTH_SHORT).show();

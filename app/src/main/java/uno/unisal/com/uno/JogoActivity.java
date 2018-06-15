@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ public class JogoActivity extends Activity {
     private ImageView slideTop;
     private ImageView slideLeft;
     private ImageView slideRight;
+    static public ImageView slideBot;
 
 
     //imagens selecao de cor
@@ -71,8 +73,8 @@ public class JogoActivity extends Activity {
     private int nPlayers = 4;
 
     //turno
-    private int playerTurn;
-    private boolean order = true;
+    static public int playerTurn;
+    static public boolean order = true;
     //carta que sera jogada
     public Carta cardToBePlayed = null;
     public int cardToBePlayedPosition = 0;
@@ -93,9 +95,12 @@ public class JogoActivity extends Activity {
     Map<Integer, List<Carta>> playerCards =  new HashMap<Integer, List<Carta>>();
 
     //animacao
-    Animation moveTop = new TranslateAnimation(0,0,0,340);
-    Animation moveLeft = new TranslateAnimation(0,855,0,0);
-    Animation moveRight = new TranslateAnimation(0,-855,0,0);
+//    Animation moveTop = new TranslateAnimation(0,0,0,340);
+//    Animation moveLeft = new TranslateAnimation(0,855,0,0);
+//    Animation moveRight = new TranslateAnimation(0,-855,0,0);
+    Animation moveTop = new TranslateAnimation(0,0,0,120);
+    Animation moveLeft = new TranslateAnimation(0,600,0,0);
+    Animation moveRight = new TranslateAnimation(0,-600,0,0);
 
     RecyclerView recyclerView;
     RecyclerViewAdapter adapter;
@@ -128,10 +133,12 @@ public class JogoActivity extends Activity {
         slideTop = findViewById(R.id.slideTopId);
         slideLeft = findViewById(R.id.slideLeftId);
         slideRight = findViewById(R.id.slideRightId);
+        slideBot = findViewById(R.id.slideBotId);
 
         slideTop.setVisibility(View.GONE);
         slideLeft.setVisibility(View.GONE);
         slideRight.setVisibility(View.GONE);
+        slideBot.setVisibility(View.GONE);
 
         numberCards0 = findViewById(R.id.textCardNumber0);
         numberCards1 = findViewById(R.id.textCardNumber1);
@@ -157,6 +164,7 @@ public class JogoActivity extends Activity {
             }
         });
     }
+
     private void moveCard(){
 
         moveTop.setFillAfter(true);
@@ -169,33 +177,19 @@ public class JogoActivity extends Activity {
         switch (playerTurn) {
             case 3:
                 slideRight.setVisibility(View.VISIBLE);
+                slideRight.setImageResource(cardPlayed.getImage());
+                slideRight.startAnimation(moveRight);
 
-                //slideRight.startAnimation(moveRight);
-                slideRight.setVisibility(View.GONE);
                 break;
             case 2:
                 slideTop.setVisibility(View.VISIBLE);
-//                final ImageView viewToAnimate = new ImageView(ImageView);
-//                fadeout.setAnimationListener(new Animation.AnimationListener(){
-//
-//                    @Override
-//                    public void onAnimationStart(Animation animation){}
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation){}
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation){
-//                        viewToAnimate.setVisibility(View.GONE);
-//                    }
-//                });
-                //viewToAnimate.startAnimation(slideTop);
+                slideTop.setImageResource(cardPlayed.getImage());
                 slideTop.startAnimation(moveTop);
-                slideTop.setVisibility(View.GONE);
                 break;
             case 1:
                 slideLeft.setVisibility(View.VISIBLE);
-                //slideLeft.startAnimation(moveLeft);
+                slideLeft.setImageResource(cardPlayed.getImage());
+                slideLeft.startAnimation(moveLeft);
                 break;
             default:
                 break;
@@ -216,6 +210,7 @@ public class JogoActivity extends Activity {
                 sizePlayerHand = playerCards.get(0).size();
             }
             resetPlay();
+
         } else {
            // Toast.makeText(JogoActivity.this, "CPU!", Toast.LENGTH_SHORT).show();
             //turno do computador
@@ -225,10 +220,10 @@ public class JogoActivity extends Activity {
                 putOnTheTable(cardToBePlayed);
                 playerCards.get(playerTurn).remove(cardToBePlayedPosition);
                 moveCard();
-
             } else {
                 drawCard(playerCards.get(playerTurn));
             }
+
             resetPlay();
             this.gameLoop();
         }
@@ -258,27 +253,23 @@ public class JogoActivity extends Activity {
             }
             //se estiver no sentido horario
             if(order){
+                drawExtra();
                 if(playerTurn == 3){
                     playerTurn = 0;
-                    drawExtra();
                 } else if (playerTurn > 3){
                     playerTurn = 1;
-                    drawExtra();
                 }else {
                     playerTurn++;
-                    drawExtra();
                 }
             } else {
                 //sentido antihorario
+                drawExtra();
                 if(playerTurn == 0){
                     playerTurn = 3;
-                    drawExtra();
                 } else if (playerTurn < 0){
                     playerTurn = 2;
-                    drawExtra();
                 }else {
                     playerTurn--;
-                    drawExtra();
                 }
 
             }
@@ -379,7 +370,8 @@ public class JogoActivity extends Activity {
         sizePlayerHand = playerCards.get(0).size();
         showCards(playerCards.get(0));
         Random rand = new Random();
-        playerTurn = rand.nextInt(4);
+//        playerTurn = rand.nextInt(4);
+        playerTurn = 0;
     }
 
     //shuffle para quando as cartas acabarem

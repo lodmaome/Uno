@@ -22,14 +22,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (extra != null) {
             String textoPassado = extra.getString("nome").toString();
-            nomeUsuario.setText(textoPassado);
+            nomeUsuario.setText("Bem vindo, " + textoPassado);
         }
 
         botaoJogar = (Button) findViewById(R.id.botaoJogarMainId);
         botaoJogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(MainActivity.this, JogarActivity.class));
+                startActivity(new Intent(MainActivity.this, JogoActivity.class));
             }
         });
     }

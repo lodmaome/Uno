@@ -27,10 +27,10 @@
 
         <ImageView
             android:id="@+id/slideLeftId"
-            android:layout_width="60dp"
-            android:layout_height="45.45dp"
+            android:layout_width="42.45dp"
+            android:layout_height="60dp"
             android:layout_marginEnd="183dp"
-            android:src="@drawable/card_back_left"
+            android:src="@drawable/card_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cardInTheMiddle"
             app:layout_constraintTop_toTopOf="parent"
@@ -38,14 +38,25 @@
 
         <ImageView
             android:id="@+id/slideRightId"
-            android:layout_width="60dp"
-            android:layout_height="45.45dp"
+            android:layout_width="42.45dp"
+            android:layout_height="60dp"
             android:layout_marginStart="182dp"
-            android:src="@drawable/card_back_right"
+            android:src="@drawable/card_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardInTheMiddle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.498" />
+
+        <ImageView
+            android:id="@+id/slideBotId"
+            android:layout_width="42.45dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="212dp"
+            android:src="@drawable/card_back"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewId"
@@ -237,8 +248,8 @@
             android:id="@+id/textCardNumber4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="64dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:text="aa"
             android:textColor="#F00"
