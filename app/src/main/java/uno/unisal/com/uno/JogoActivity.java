@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,12 +20,21 @@ import java.util.Random;
 import uno.unisal.com.uno.classes.Carta;
 import uno.unisal.com.uno.util.CallableStatement;
 
+import static java.lang.Thread.*;
+
 public class JogoActivity extends Activity {
     //caso de na telha observar logs
     private static final String TAG = "MainActivity";
 
     //carta do canto iferior direito
     private ImageView draw;
+
+    //numero de cartas
+    private TextView numberCards0;
+    private TextView numberCards1;
+    private TextView numberCards2;
+    private TextView numberCards3;
+    private TextView numberCards4;
 
     //carta jogada, centro da mesa
     static public Carta cardPlayed;
@@ -44,7 +54,7 @@ public class JogoActivity extends Activity {
     public int cardToBePlayedPosition = 0;
 
     //armazena todas as cartas
-    private Carta[] deck = new Carta[108];
+    private Carta[] deck = new Carta[100];
 
     //array de controle para a distribuicao de cartas
     private List<Integer> controlDeck = new ArrayList<>();
@@ -73,18 +83,269 @@ public class JogoActivity extends Activity {
         cardPlayedView = (ImageView) findViewById(R.id.cardPlayedId);
         cardPlayedView.setImageResource(R.drawable.card_back);
 
+        numberCards0 = findViewById(R.id.textCardNumber0);
+        numberCards1 = findViewById(R.id.textCardNumber1);
+        numberCards2 = findViewById(R.id.textCardNumber2);
+        numberCards3 = findViewById(R.id.textCardNumber3);
+        numberCards4 = findViewById(R.id.textCardNumber4);
+
         //botao de pesca
         draw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawCard(playerCards.get(0));
-                //Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
                 Toast.makeText(JogoActivity.this, "PESCANDO:" + playerCards.get(0).size(), Toast.LENGTH_SHORT).show();
                 showCards(playerCards.get(0));
                 gameLoop();
             }
         });
 
+        createDeck();
+        startGame();
+        gameLoop();
+    }
+
+
+    private void gameLoop() {
+        //loop ate que alguem fique sem cartas
+        if(adapter!=null){
+            adapter.notifyDataSetChanged();
+        }
+        //vez do jogador
+        if(playerTurn == 0){
+            Toast.makeText(JogoActivity.this, "Sua vez!", Toast.LENGTH_SHORT).show();
+            if(sizePlayerHand != playerCards.get(0).size()){
+                // prender o codigo ate o jogador pescar ou jogar
+                showCards(playerCards.get(0));
+                sizePlayerHand = playerCards.get(0).size();
+            }
+            resetPlay();
+        } else {
+           // Toast.makeText(JogoActivity.this, "CPU!", Toast.LENGTH_SHORT).show();
+            //turno do computador
+            //essa funcao verifica (boolean) se existe uma carta para jogar
+            boolean canPlayCard = canPlayCard();
+            if(canPlayCard){
+                putOnTheTable(cardToBePlayed);
+                playerCards.get(playerTurn).remove(cardToBePlayedPosition);
+            } else {
+                drawCard(playerCards.get(playerTurn));
+            }
+            resetPlay();
+            this.gameLoop();
+        }
+    }
+
+    private void resetPlay() {
+        //resetar a carta que sera jogada
+        cardToBePlayed = null;
+        cardToBePlayedPosition = -1;
+
+        if (endGame(playerCards.get(playerTurn))) {
+            Toast.makeText(JogoActivity.this, "O jogador: " + playerTurn+1 + " venceu!", Toast.LENGTH_SHORT).show();
+            //startActivity(new Intent(IntroActivity.this, LoginActivity.class));
+        } else {
+            numberOfCards();
+            if(cardPlayed.getSymbol().equals("skip")){
+                playerTurn++;
+            }
+            if(playerTurn == 3){
+                playerTurn = 0;
+                drawExtra();
+            } else if (playerTurn > 3){
+                playerTurn = 1;
+                drawExtra();
+            }else {
+                playerTurn++;
+                drawExtra();
+            }
+        }
+    }
+
+    private void drawExtra(){
+
+        if(cardPlayed.getSymbol().equals("picker")) {
+            drawCard(playerCards.get(playerTurn));
+            drawCard(playerCards.get(playerTurn));
+        } else if(cardPlayed.getSymbol().equals("pickFour")) {
+            drawCard(playerCards.get(playerTurn));
+            drawCard(playerCards.get(playerTurn));
+            drawCard(playerCards.get(playerTurn));
+            drawCard(playerCards.get(playerTurn));
+            playerTurn++;
+            gameLoop();
+        }
+    }
+
+    private boolean canPlayCard() {
+        return playCard(playerCards.get(playerTurn));
+    }
+
+    //jogadas simples
+    public boolean playCard(List<Carta> hand){
+        boolean isGoingToPlay = false;
+        for (int i = 0; i < hand.size(); i++) {
+            if(hand.get(i).getSymbol().equals(cardPlayed.getSymbol()) || hand.get(i).getColor().equals(cardPlayed.getColor()) || hand.get(i).getColor().equals("black")){
+                if(cardToBePlayed == null){
+                    cardToBePlayed = hand.get(i);
+                    cardToBePlayedPosition = i;
+                    isGoingToPlay = true;
+                } else {
+                    if (hand.get(i).getValue() > cardToBePlayed.getValue()) {
+                        cardToBePlayed = hand.get(i);
+                        cardToBePlayedPosition = i;
+                    }
+                }
+            }
+        }
+
+        return isGoingToPlay;
+    }
+
+    //finalizar jogo
+    public boolean endGame(List<Carta> hand){
+        return hand.isEmpty();
+    }
+
+    //shuffle para o começo do jogo
+    public void shuffleStart(){
+        controlDeck.clear();
+        for (int i = 0; i < 100 ; i++) {
+            controlDeck.add(i);
+        }
+        Collections.shuffle(controlDeck);
+    }
+
+    //pegar a próxima carta do monte
+    public Carta nextCard(){
+        Carta nCard;
+        int indexCarta;
+        indexCarta = controlDeck.get(0);
+        controlDeck.remove(0);
+        nCard = deck[indexCarta];
+        return nCard;
+    }
+
+    //colocar carta na mesa
+    public void putOnTheTable(Carta card){
+        cardPlayed = card;
+        cardPlayedView.setImageResource(cardPlayed.getImage());
+    }
+
+    //iniciar jogo
+    public void startGame(){
+        shuffleStart();
+        //pega o valor do deck de controle e remove do deck principal
+        int indexCarta = 0;
+        //coloca a primeira carta na mesa
+        cardPlayed = nextCard();
+        cardPlayedView.setImageResource(cardPlayed.getImage());
+
+        //criar uma lista no mapa para cada jogador
+        for (int i = 0; i < nPlayers ; i++) {
+            List<Carta> hand = new ArrayList<>();
+            for (int j = 0; j < 7 ; j++) {
+                // adicionar cartas numa mao
+                hand.add(nextCard());
+            }
+            //adicionar a mao criada no mapa
+            playerCards.put(i, hand);
+        }
+
+        //exibir mao
+        sizePlayerHand = playerCards.get(0).size();
+        showCards(playerCards.get(0));
+        Random rand = new Random();
+        playerTurn = rand.nextInt(4);
+    }
+
+    //shuffle para quando as cartas acabarem
+    public void shuffleDeck (Map<Integer, List<Carta>> playerCards){
+        controlDeck.clear();
+        controlShuffle.clear();
+        //recriar o deck de controle
+        for (int i = 0; i < 100 ; i++) {
+            controlDeck.add(i);
+        }
+        //adicionar as cartas das maos e da mesa em um deck.
+        for (int i = 0; i < nPlayers; i++) {
+            for (int j = 0; j < playerCards.get(i).size() ; j++) {
+                controlShuffle.add(playerCards.get(i).get(j).getId());
+            }
+        }
+        controlShuffle.add(cardPlayed.getId());
+
+        //tirar as cartas usadas do deck de controle
+        Collections.sort(controlShuffle, Collections.reverseOrder());
+        for (int i = 0; i < controlShuffle.size() ; i++) {
+            controlDeck.remove(controlShuffle.get(i));
+        }
+
+        //embaralhar o restante das cartas
+        Collections.shuffle(controlDeck);
+        Toast.makeText(JogoActivity.this, "Cartas adicionadas ao deck: " + controlDeck.size(), Toast.LENGTH_SHORT).show();
+    }
+
+    //pescar
+    public void drawCard(List<Carta> hand){
+        if(controlDeck.size() == 0){
+            shuffleDeck(playerCards);
+        }
+
+        int indexCarta = controlDeck.get(0);
+        controlDeck.remove(0);
+        hand.add(deck[indexCarta]);
+        //Toast.makeText(JogoActivity.this, "Cartas restantes: " + controlDeck.size(), Toast.LENGTH_SHORT).show();
+        //showCards(hand);
+    }
+
+    private void validateGameLoopCall(){
+        gameLoop();
+    }
+
+    //exibir mão do jogador
+    public void showCards(List<Carta> handView){
+        //Log.d(TAG, "showing cards");
+        cardsPictures.clear();
+        for (int i = 0; i < handView.size(); i++) {
+            cardsPictures.add(handView.get(i).getImage());
+        }
+        initRecyclerView(handView);
+    }
+
+    //iniciar a visualizaca da mao
+    private void initRecyclerView(List<Carta> handView){
+        Log.d(TAG, "initRecyclerView: init recyclerview");
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView = findViewById(R.id.recyclerViewId);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new RecyclerViewAdapter(handView, cardsPictures, this, new CallableStatement() {
+            @Override
+            public void callGameLoop() {
+                validateGameLoopCall();
+            }
+
+            @Override
+            public boolean canPlayCard(int position) {
+                Carta carta = playerCards.get(0).get(position);
+                if(carta != null){
+                    return carta.getSymbol().equals(cardPlayed.getSymbol()) || carta.getColor().equals(cardPlayed.getColor()) || carta.getColor().equals("black1") ||carta.getColor().equals("black2");
+                }
+                return false;
+            }
+        });
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void numberOfCards(){
+        numberCards0.setText(String.valueOf(playerCards.get(0).size()));
+        numberCards1.setText(String.valueOf(playerCards.get(1).size()));
+        numberCards2.setText(String.valueOf(playerCards.get(2).size()));
+        numberCards3.setText(String.valueOf(playerCards.get(3).size()));
+        numberCards4.setText(String.valueOf(controlDeck.size()));
+    }
+
+    private void createDeck() {
         //declaracao de todas as cartas
         deck[0] = new Carta(R.drawable.blue_0, 0, "0", "blue", 0);
         deck[1] = new Carta(R.drawable.blue_1, 1, "1", "blue", 1);
@@ -186,241 +447,13 @@ public class JogoActivity extends Activity {
         deck[97] = new Carta(R.drawable.red_picker, 97, "picker", "red", 20);
         deck[98] = new Carta(R.drawable.red_skip, 98, "skip", "red", 20);
         deck[99] = new Carta(R.drawable.red_skip, 99, "skip", "red", 20);
-        deck[100] = new Carta(R.drawable.wild_pick_four, 100, "pickFour", "black1", 50);
-        deck[101] = new Carta(R.drawable.wild_pick_four, 101, "pickFour", "black1", 50);
-        deck[102] = new Carta(R.drawable.wild_pick_four, 102, "pickFour", "black1", 50);
-        deck[103] = new Carta(R.drawable.wild_pick_four, 103, "pickFour", "black1", 50);
-        deck[104] = new Carta(R.drawable.wild_color_changer, 104, "colorChange", "black2", 40);
-        deck[105] = new Carta(R.drawable.wild_color_changer, 105, "colorChange", "black2", 40);
-        deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black2", 40);
-        deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black2", 40);
-
-        startGame();
-
-        sizePlayerHand = playerCards.get(0).size();
-
-        gameLoop();
-        //onCreate end
+//        deck[100] = new Carta(R.drawable.wild_pick_four, 100, "pickFour", "black", 50);
+//        deck[101] = new Carta(R.drawable.wild_pick_four, 101, "pickFour", "black", 50);
+//        deck[102] = new Carta(R.drawable.wild_pick_four, 102, "pickFour", "black", 50);
+//        deck[103] = new Carta(R.drawable.wild_pick_four, 103, "pickFour", "black", 50);
+//        deck[104] = new Carta(R.drawable.wild_color_changer, 104, "colorChange", "black", 40);
+//        deck[105] = new Carta(R.drawable.wild_color_changer, 105, "colorChange", "black", 40);
+//        deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black", 40);
+//        deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black", 40);
     }
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        startGame();
-//
-//        sizePlayerHand = playerCards.get(0).size();
-//
-//        gameLoop();
-//
-//
-//    }
-
-    private void gameLoop() {
-        //loop ate que alguem fique sem cartas
-        //vez do jogador
-        if(adapter!=null){
-            adapter.notifyDataSetChanged();
-        }
-
-        if(playerTurn == 0){
-            Toast.makeText(JogoActivity.this, "Sua vez!", Toast.LENGTH_SHORT).show();
-            if(sizePlayerHand != playerCards.get(0).size()){
-                // prender o codigo ate o jogador pescar ou jogar
-                showCards(playerCards.get(0));
-                sizePlayerHand = playerCards.get(0).size();
-            }
-            resetPlay();
-        } else {
-            Toast.makeText(JogoActivity.this, "CPU!", Toast.LENGTH_SHORT).show();
-            //turno do computador
-            //essa funcao verifica (boolean) se existe uma carta para jogar
-            boolean canPlayCard = canPlayCard();
-            if(canPlayCard){
-                putOnTheTable(cardToBePlayed);
-                playerCards.get(playerTurn).remove(cardToBePlayedPosition);
-            } else {
-                drawCard(playerCards.get(playerTurn));
-            }
-            resetPlay();
-            this.gameLoop();
-        }
-
-
-    }
-
-    private void resetPlay() {
-        //resetar a carta que sera jogada
-        cardToBePlayed = null;
-        cardToBePlayedPosition = -1;
-
-        if (endGame(playerCards.get(playerTurn))) {
-            Toast.makeText(JogoActivity.this, "O jogador: " + playerTurn+1 + " venceu!", Toast.LENGTH_SHORT).show();
-        } else {
-            if(playerTurn == 3){
-                playerTurn = 0;
-            } else {
-                playerTurn++;
-            }
-        }
-    }
-
-    private boolean canPlayCard() {
-        return playCard(playerCards.get(playerTurn));
-    }
-
-    //jogadas simples
-    public boolean playCard(List<Carta> hand){
-        boolean isGoingToPlay = false;
-        for (int i = 0; i < hand.size(); i++) {
-            if(hand.get(i).getSymbol().equals(cardPlayed.getSymbol()) || hand.get(i).getColor().equals(cardPlayed.getColor()) || hand.get(i).getColor().equals("black1") || hand.get(i).getColor().equals("black2")){
-                if(cardToBePlayed == null){
-                    cardToBePlayed = hand.get(i);
-                    cardToBePlayedPosition = i;
-                    isGoingToPlay = true;
-                } else {
-                    if (hand.get(i).getValue() > cardToBePlayed.getValue()) {
-                        cardToBePlayed = hand.get(i);
-                        cardToBePlayedPosition = i;
-                    }
-                }
-            }
-        }
-
-        return isGoingToPlay;
-    }
-
-    //finalizar jogo
-    public boolean endGame(List<Carta> hand){
-        return hand.isEmpty();
-    }
-
-    //shuffle para o começo do jogo
-    public void shuffleStart(){
-        controlDeck.clear();
-        for (int i = 0; i < 108 ; i++) {
-            controlDeck.add(i);
-        }
-        Collections.shuffle(controlDeck);
-    }
-
-    //pegar a próxima carta do monte
-    public Carta nextCard(){
-        Carta nCard;
-        int indexCarta;
-        indexCarta = controlDeck.get(0);
-        controlDeck.remove(0);
-        nCard = deck[indexCarta];
-        return nCard;
-    }
-
-    //colocar carta na mesa
-    public void putOnTheTable(Carta card){
-        cardPlayed = card;
-        cardPlayedView.setImageResource(cardPlayed.getImage());
-    }
-
-    //iniciar jogo
-    public void startGame(){
-        shuffleStart();
-        //pega o valor do deck de controle e remove do deck principal
-        int indexCarta = 0;
-        //coloca a primeira carta na mesa
-        cardPlayed = nextCard();
-        cardPlayedView.setImageResource(cardPlayed.getImage());
-
-        //criar uma lista no mapa para cada jogador
-        for (int i = 0; i < nPlayers ; i++) {
-            List<Carta> hand = new ArrayList<>();
-            for (int j = 0; j < 7 ; j++) {
-                // adicionar cartas numa mao
-                hand.add(nextCard());
-            }
-            //adicionar a mao criada no mapa
-            playerCards.put(i, hand);
-        }
-        //exibir mao
-        showCards(playerCards.get(0));
-        Random rand = new Random();
-        playerTurn = rand.nextInt(4);
-    }
-
-    //shuffle para quando as cartas acabarem
-    public void shuffleDeck (Map<Integer, List<Carta>> playerCards){
-        controlDeck.clear();
-        controlShuffle.clear();
-        //recriar o deck de controle
-        for (int i = 0; i < 108 ; i++) {
-            controlDeck.add(i);
-        }
-        //adicionar as cartas das maos e da mesa em um deck.
-        for (int i = 0; i < nPlayers; i++) {
-            for (int j = 0; j < playerCards.get(i).size() ; j++) {
-                controlShuffle.add(playerCards.get(i).get(j).getId());
-            }
-        }
-        controlShuffle.add(cardPlayed.getId());
-
-        //tirar as cartas usadas do deck de controle
-        Collections.sort(controlShuffle, Collections.reverseOrder());
-        for (int i = 0; i < controlShuffle.size() ; i++) {
-            controlDeck.remove(controlShuffle.get(i));
-        }
-
-        //embaralhar o restante das cartas
-        Collections.shuffle(controlDeck);
-        Toast.makeText(JogoActivity.this, "Cartas adicionadas ao deck: " + controlDeck.size(), Toast.LENGTH_SHORT).show();
-    }
-
-    //pescar
-    public void drawCard(List<Carta> hand){
-        if(controlDeck.size() == 0){
-            shuffleDeck(playerCards);
-        }
-
-        int indexCarta = controlDeck.get(0);
-        controlDeck.remove(0);
-        hand.add(deck[indexCarta]);
-        //Toast.makeText(JogoActivity.this, "Cartas restantes: " + controlDeck.size(), Toast.LENGTH_SHORT).show();
-        //showCards(hand);
-    }
-
-    //exibir mão do jogador
-    public void showCards(List<Carta> handView){
-        Log.d(TAG, "showing cards");
-        cardsPictures.clear();
-        for (int i = 0; i < handView.size(); i++) {
-            cardsPictures.add(handView.get(i).getImage());
-        }
-        initRecyclerView(handView);
-    }
-
-    //iniciar a visualizaca da mao
-    private void initRecyclerView(List<Carta> handView){
-        Log.d(TAG, "initRecyclerView: init recyclerview");
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView = findViewById(R.id.recyclerViewId);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecyclerViewAdapter(handView, cardsPictures, this, new CallableStatement() {
-            @Override
-            public void callGameLoop() {
-                validateGameLoopCall();
-            }
-
-            @Override
-            public boolean canPlayCard(int position) {
-                Carta carta = playerCards.get(0).get(position);
-                if(carta != null){
-                    return carta.getSymbol().equals(cardPlayed.getSymbol()) || carta.getColor().equals(cardPlayed.getColor()) || carta.getColor().equals("black1") ||carta.getColor().equals("black2");
-                }
-                return false;
-            }
-        });
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void validateGameLoopCall(){
-        gameLoop();
-    }
-
 }
