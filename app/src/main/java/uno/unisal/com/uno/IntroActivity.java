@@ -1,12 +1,13 @@
 package uno.unisal.com.uno;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-public class IntroActivity extends AppCompatActivity {
+public class IntroActivity extends Activity {
 
 
 

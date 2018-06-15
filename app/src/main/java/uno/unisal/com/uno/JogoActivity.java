@@ -2,10 +2,15 @@ package uno.unisal.com.uno;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +31,9 @@ public class JogoActivity extends Activity {
     //caso de na telha observar logs
     private static final String TAG = "MainActivity";
 
+    //layouts
+    private ConstraintLayout table;
+    private ConstraintLayout chooseColor;
     //carta do canto iferior direito
     private ImageView draw;
 
@@ -40,6 +48,10 @@ public class JogoActivity extends Activity {
     private ImageView cardsTop;
     private ImageView cardsRight;
     private ImageView cardsLeft;
+    private ImageView slideTop;
+    private ImageView slideLeft;
+    private ImageView slideRight;
+
 
     //imagens selecao de cor
     private ImageView colorRed;
@@ -80,6 +92,11 @@ public class JogoActivity extends Activity {
     //mãos dos jogadores
     Map<Integer, List<Carta>> playerCards =  new HashMap<Integer, List<Carta>>();
 
+    //animacao
+    Animation moveTop = new TranslateAnimation(0,0,0,340);
+    Animation moveLeft = new TranslateAnimation(0,855,0,0);
+    Animation moveRight = new TranslateAnimation(0,-855,0,0);
+
     RecyclerView recyclerView;
     RecyclerViewAdapter adapter;
 
@@ -97,6 +114,9 @@ public class JogoActivity extends Activity {
     }
 
     private void startTable() {
+        table = findViewById(R.id.layoutTableId);
+        chooseColor = findViewById(R.id.layoutChooseColorId);
+
         //ligando os botoes
         draw = (ImageView) findViewById(R.id.cardPileId);
         cardPlayedView = (ImageView) findViewById(R.id.cardPlayedId);
@@ -105,6 +125,13 @@ public class JogoActivity extends Activity {
         cardsTop = findViewById(R.id.cardTopId);
         cardsRight = findViewById(R.id.cardRightId);
         cardsLeft = findViewById(R.id.cardLeftId);
+        slideTop = findViewById(R.id.slideTopId);
+        slideLeft = findViewById(R.id.slideLeftId);
+        slideRight = findViewById(R.id.slideRightId);
+
+        slideTop.setVisibility(View.GONE);
+        slideLeft.setVisibility(View.GONE);
+        slideRight.setVisibility(View.GONE);
 
         numberCards0 = findViewById(R.id.textCardNumber0);
         numberCards1 = findViewById(R.id.textCardNumber1);
@@ -118,6 +145,7 @@ public class JogoActivity extends Activity {
         colorBlue = findViewById(R.id.chooseColorBlueId);
         colorYellow = findViewById(R.id.chooseColorYellowId);
 
+
         //botao de pesca
         draw.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,8 +157,52 @@ public class JogoActivity extends Activity {
             }
         });
     }
+    private void moveCard(){
 
-    private void gameLoop() {
+        moveTop.setFillAfter(true);
+        moveTop.setDuration(1200);
+        moveLeft.setFillAfter(true);
+        moveLeft.setDuration(1200);
+        moveRight.setFillAfter(true);
+        moveRight.setDuration(1200);
+
+        switch (playerTurn) {
+            case 3:
+                slideRight.setVisibility(View.VISIBLE);
+
+                //slideRight.startAnimation(moveRight);
+                slideRight.setVisibility(View.GONE);
+                break;
+            case 2:
+                slideTop.setVisibility(View.VISIBLE);
+//                final ImageView viewToAnimate = new ImageView(ImageView);
+//                fadeout.setAnimationListener(new Animation.AnimationListener(){
+//
+//                    @Override
+//                    public void onAnimationStart(Animation animation){}
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation){}
+//
+//                    @Override
+//                    public void onAnimationEnd(Animation animation){
+//                        viewToAnimate.setVisibility(View.GONE);
+//                    }
+//                });
+                //viewToAnimate.startAnimation(slideTop);
+                slideTop.startAnimation(moveTop);
+                slideTop.setVisibility(View.GONE);
+                break;
+            case 1:
+                slideLeft.setVisibility(View.VISIBLE);
+                //slideLeft.startAnimation(moveLeft);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void gameLoop(){
         //loop ate que alguem fique sem cartas
         if(adapter!=null){
             adapter.notifyDataSetChanged();
@@ -152,6 +224,8 @@ public class JogoActivity extends Activity {
             if(canPlayCard){
                 putOnTheTable(cardToBePlayed);
                 playerCards.get(playerTurn).remove(cardToBePlayedPosition);
+                moveCard();
+
             } else {
                 drawCard(playerCards.get(playerTurn));
             }
@@ -159,6 +233,7 @@ public class JogoActivity extends Activity {
             this.gameLoop();
         }
     }
+
 
     private void resetPlay() {
         //resetar a carta que sera jogada
@@ -416,6 +491,41 @@ public class JogoActivity extends Activity {
                 break;
         }
 
+        switch (b) {
+            case 4:
+                cardsTop.setImageResource(R.drawable.cardstop4);
+                break;
+            case 3:
+                cardsTop.setImageResource(R.drawable.cardstop3);
+                break;
+            case 2:
+                cardsTop.setImageResource(R.drawable.cardstop2);
+                break;
+            case 1:
+                cardsTop.setImageResource(R.drawable.cardstop1);
+                break;
+            default:
+                cardsTop.setImageResource(R.drawable.cardstop5);
+                break;
+        }
+
+        switch (c) {
+            case 4:
+                cardsRight.setImageResource(R.drawable.cardsright4);
+                break;
+            case 3:
+                cardsRight.setImageResource(R.drawable.cardsright3);
+                break;
+            case 2:
+                cardsRight.setImageResource(R.drawable.cardsright2);
+                break;
+            case 1:
+                cardsRight.setImageResource(R.drawable.cardsright1);
+                break;
+            default:
+                cardsRight.setImageResource(R.drawable.cardsright5);
+                break;
+        }
 //        if(playerCards.get(1).size() > 4){
 //            cardsLeft.setImageResource(R.drawable.cardsleft5);
 //        }else if(playerCards.get(1).size() == 4){
@@ -428,29 +538,29 @@ public class JogoActivity extends Activity {
 //            cardsLeft.setImageResource(R.drawable.cardsleft1);
 //        }
 
-        if(playerCards.get(2).size() > 4){
-            cardsLeft.setImageResource(R.drawable.cardstop5);
-        }else if(playerCards.get(2).size() == 4){
-            cardsLeft.setImageResource(R.drawable.cardstop4);
-        }else if(playerCards.get(2).size() == 3){
-            cardsLeft.setImageResource(R.drawable.cardstop3);
-        }else if(playerCards.get(2).size() == 2){
-            cardsLeft.setImageResource(R.drawable.cardstop2);
-        } else if(playerCards.get(2).size() == 1){
-            cardsLeft.setImageResource(R.drawable.cardstop1);
-        }
-
-        if(playerCards.get(3).size() > 4){
-            cardsLeft.setImageResource(R.drawable.cardsright5);
-        }else if(playerCards.get(3).size() == 4){
-            cardsLeft.setImageResource(R.drawable.cardsright4);
-        }else if(playerCards.get(3).size() == 3){
-            cardsLeft.setImageResource(R.drawable.cardsright3);
-        }else if(playerCards.get(3).size() == 2){
-            cardsLeft.setImageResource(R.drawable.cardsright2);
-        } else if(playerCards.get(3).size() == 1){
-            cardsLeft.setImageResource(R.drawable.cardsright1);
-        }
+//        if(playerCards.get(2).size() > 4){
+//            cardsLeft.setImageResource(R.drawable.cardstop5);
+//        }else if(playerCards.get(2).size() == 4){
+//            cardsLeft.setImageResource(R.drawable.cardstop4);
+//        }else if(playerCards.get(2).size() == 3){
+//            cardsLeft.setImageResource(R.drawable.cardstop3);
+//        }else if(playerCards.get(2).size() == 2){
+//            cardsLeft.setImageResource(R.drawable.cardstop2);
+//        } else if(playerCards.get(2).size() == 1){
+//            cardsLeft.setImageResource(R.drawable.cardstop1);
+//        }
+//
+//        if(playerCards.get(3).size() > 4){
+//            cardsLeft.setImageResource(R.drawable.cardsright5);
+//        }else if(playerCards.get(3).size() == 4){
+//            cardsLeft.setImageResource(R.drawable.cardsright4);
+//        }else if(playerCards.get(3).size() == 3){
+//            cardsLeft.setImageResource(R.drawable.cardsright3);
+//        }else if(playerCards.get(3).size() == 2){
+//            cardsLeft.setImageResource(R.drawable.cardsright2);
+//        } else if(playerCards.get(3).size() == 1){
+//            cardsLeft.setImageResource(R.drawable.cardsright1);
+//        }
 
 
     }
