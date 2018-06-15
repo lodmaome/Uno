@@ -81,6 +81,7 @@ public class JogoActivity extends Activity {
                 //Toast.makeText(mContext, cardsPictures.get(position), Toast.LENGTH_SHORT).show();
                 Toast.makeText(JogoActivity.this, "PESCANDO:" + playerCards.get(0).size(), Toast.LENGTH_SHORT).show();
                 showCards(playerCards.get(0));
+                gameLoop();
             }
         });
 
@@ -194,21 +195,26 @@ public class JogoActivity extends Activity {
         deck[106] = new Carta(R.drawable.wild_color_changer, 106, "colorChange", "black2", 40);
         deck[107] = new Carta(R.drawable.wild_color_changer, 107, "colorChange", "black2", 40);
 
-        //onCreate end
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
         startGame();
 
         sizePlayerHand = playerCards.get(0).size();
 
         gameLoop();
-
-
+        //onCreate end
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//
+//        startGame();
+//
+//        sizePlayerHand = playerCards.get(0).size();
+//
+//        gameLoop();
+//
+//
+//    }
 
     private void gameLoop() {
         //loop ate que alguem fique sem cartas
@@ -259,11 +265,15 @@ public class JogoActivity extends Activity {
         }
     }
 
+    private boolean canPlayCard() {
+        return playCard(playerCards.get(playerTurn));
+    }
+
     //jogadas simples
     public boolean playCard(List<Carta> hand){
         boolean isGoingToPlay = false;
         for (int i = 0; i < hand.size(); i++) {
-            if(hand.get(i).getSymbol().equals(cardPlayed.getSymbol()) || hand.get(i).getColor().equals(cardPlayed.getColor())){
+            if(hand.get(i).getSymbol().equals(cardPlayed.getSymbol()) || hand.get(i).getColor().equals(cardPlayed.getColor()) || hand.get(i).getColor().equals("black1") || hand.get(i).getColor().equals("black2")){
                 if(cardToBePlayed == null){
                     cardToBePlayed = hand.get(i);
                     cardToBePlayedPosition = i;
@@ -401,7 +411,7 @@ public class JogoActivity extends Activity {
             public boolean canPlayCard(int position) {
                 Carta carta = playerCards.get(0).get(position);
                 if(carta != null){
-                    return carta.getSymbol().equals(cardPlayed.getSymbol()) || carta.getColor().equals(cardPlayed.getColor());
+                    return carta.getSymbol().equals(cardPlayed.getSymbol()) || carta.getColor().equals(cardPlayed.getColor()) || carta.getColor().equals("black1") ||carta.getColor().equals("black2");
                 }
                 return false;
             }
@@ -412,10 +422,5 @@ public class JogoActivity extends Activity {
     private void validateGameLoopCall(){
         gameLoop();
     }
-
-    private boolean canPlayCard() {
-        return playCard(playerCards.get(playerTurn));
-    }
-
 
 }

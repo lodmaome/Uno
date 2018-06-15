@@ -67,6 +67,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     playedView.setImageResource(handView.get(position).getImage());
                     handView.remove(position);
                     callable.callGameLoop();
+                } else{
+                    Toast.makeText(mContext, "Play a " + played.getColor().toString() + " card or any " + played.getSymbol().toString() + ".", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -75,11 +77,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public int getItemCount() {
         return cardsPictures.size();
-    }
-
-    public void removeItem (int position){
-        cardsPictures.remove(position);
-        notifyItemRemoved(position);
     }
 
 
