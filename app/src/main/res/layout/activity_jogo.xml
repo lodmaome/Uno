@@ -51,7 +51,7 @@
             android:id="@+id/slideBotId"
             android:layout_width="42.45dp"
             android:layout_height="60dp"
-            android:layout_marginTop="212dp"
+            android:layout_marginTop="245dp"
             android:src="@drawable/card_back"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"

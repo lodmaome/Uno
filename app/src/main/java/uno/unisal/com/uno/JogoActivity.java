@@ -1,6 +1,7 @@
 package uno.unisal.com.uno;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -94,14 +95,19 @@ public class JogoActivity extends Activity {
     //mãos dos jogadores
     Map<Integer, List<Carta>> playerCards =  new HashMap<Integer, List<Carta>>();
 
-    //animacao
+    //animacao em cima
 //    Animation moveTop = new TranslateAnimation(0,0,0,340);
 //    Animation moveLeft = new TranslateAnimation(0,855,0,0);
 //    Animation moveRight = new TranslateAnimation(0,-855,0,0);
-    Animation moveTop = new TranslateAnimation(0,0,0,120);
-    Animation moveLeft = new TranslateAnimation(0,600,0,0);
-    Animation moveRight = new TranslateAnimation(0,-600,0,0);
+    //animacao do lado
+//    Animation moveTop = new TranslateAnimation(0,0,0,120);
+//    Animation moveLeft = new TranslateAnimation(0,600,0,0);
+//    Animation moveRight = new TranslateAnimation(0,-600,0,0);
 
+    //animacaonegritudejr
+    Animation moveTop = new TranslateAnimation(0,0,0,85);
+    Animation moveLeft = new TranslateAnimation(0,420,0,0);
+    Animation moveRight = new TranslateAnimation(0,-420,0,0);
     RecyclerView recyclerView;
     RecyclerViewAdapter adapter;
 
@@ -241,9 +247,33 @@ public class JogoActivity extends Activity {
         //se o jogo acabou
         if (endGame(playerCards.get(playerTurn))) {
             Toast.makeText(JogoActivity.this, "O jogador: " + playerTurn+1 + " venceu!", Toast.LENGTH_SHORT).show();
-            //startActivity(new Intent(IntroActivity.this, LoginActivity.class));
+            startActivity(new Intent(JogoActivity.this, WinActivity.class));
         } else {
+            if(cardPlayed.getColor().equals("black")){
+                Random randm = new Random();
+                int cor = randm.nextInt(4);
+                switch (cor) {
+                    case 3:
+                        cardPlayed.setColor("yellow");
+                        cardPlayedView.setImageResource(R.drawable.choosecoloryellow);
+                        break;
+                    case 2:
+                        cardPlayed.setColor("blue");
+                        cardPlayedView.setImageResource(R.drawable.choosecolorblue);
+                        break;
+                    case 1:
+                        cardPlayed.setColor("green");
+                        cardPlayedView.setImageResource(R.drawable.choosecolorgreen);
+                        break;
+                    case 0:
+                        cardPlayed.setColor("red");
+                        cardPlayedView.setImageResource(R.drawable.choosecolorred);
+                        break;
+                    default:
+                        break;
+                }
 
+            }
             if(cardPlayed.getSymbol().equals("skip")){
                 playerTurn++;
             }
@@ -251,6 +281,7 @@ public class JogoActivity extends Activity {
             if(cardPlayed.getSymbol().equals("reverse")){
                 order = !order;
             }
+
             //se estiver no sentido horario
             if(order){
                 drawExtra();
@@ -271,7 +302,6 @@ public class JogoActivity extends Activity {
                 }else {
                     playerTurn--;
                 }
-
             }
         }
     }
@@ -518,43 +548,6 @@ public class JogoActivity extends Activity {
                 cardsRight.setImageResource(R.drawable.cardsright5);
                 break;
         }
-//        if(playerCards.get(1).size() > 4){
-//            cardsLeft.setImageResource(R.drawable.cardsleft5);
-//        }else if(playerCards.get(1).size() == 4){
-//            cardsLeft.setImageResource(R.drawable.cardsleft4);
-//        }else if(playerCards.get(1).size() == 3){
-//            cardsLeft.setImageResource(R.drawable.cardsleft3);
-//        }else if(playerCards.get(1).size() == 2){
-//            cardsLeft.setImageResource(R.drawable.cardsleft2);
-//        } else if(playerCards.get(1).size() == 1){
-//            cardsLeft.setImageResource(R.drawable.cardsleft1);
-//        }
-
-//        if(playerCards.get(2).size() > 4){
-//            cardsLeft.setImageResource(R.drawable.cardstop5);
-//        }else if(playerCards.get(2).size() == 4){
-//            cardsLeft.setImageResource(R.drawable.cardstop4);
-//        }else if(playerCards.get(2).size() == 3){
-//            cardsLeft.setImageResource(R.drawable.cardstop3);
-//        }else if(playerCards.get(2).size() == 2){
-//            cardsLeft.setImageResource(R.drawable.cardstop2);
-//        } else if(playerCards.get(2).size() == 1){
-//            cardsLeft.setImageResource(R.drawable.cardstop1);
-//        }
-//
-//        if(playerCards.get(3).size() > 4){
-//            cardsLeft.setImageResource(R.drawable.cardsright5);
-//        }else if(playerCards.get(3).size() == 4){
-//            cardsLeft.setImageResource(R.drawable.cardsright4);
-//        }else if(playerCards.get(3).size() == 3){
-//            cardsLeft.setImageResource(R.drawable.cardsright3);
-//        }else if(playerCards.get(3).size() == 2){
-//            cardsLeft.setImageResource(R.drawable.cardsright2);
-//        } else if(playerCards.get(3).size() == 1){
-//            cardsLeft.setImageResource(R.drawable.cardsright1);
-//        }
-
-
     }
 
     private void createDeck() {

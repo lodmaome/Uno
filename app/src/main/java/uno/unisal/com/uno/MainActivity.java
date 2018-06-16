@@ -11,6 +11,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView nomeUsuario;
     private Button botaoJogar;
+    public static String nomeGuardado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (extra != null) {
             String textoPassado = extra.getString("nome").toString();
+            nomeGuardado = textoPassado;
             nomeUsuario.setText("Bem vindo, " + textoPassado);
+
         }
 
         botaoJogar = (Button) findViewById(R.id.botaoJogarMainId);
